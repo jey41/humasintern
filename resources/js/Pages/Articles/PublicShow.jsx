@@ -30,86 +30,106 @@ export default function PublicShow({ article, recentArticles = [] }) {
         <PublicLayout>
             <Head title={`${t(article, 'title')} - Humas Intern Unmul`} />
 
-            <main className="flex-grow pt-[120px] pb-xl px-margin-mobile md:px-margin-desktop max-w-[960px] mx-auto w-full flex flex-col gap-lg">
-                {/* Back Link */}
-                <Link 
-                    href="/articles" 
-                    className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-bold text-sm w-fit group"
-                >
-                    <span className="material-symbols-outlined text-sm group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-                    {getStatic('back_btn')}
-                </Link>
-
+            <div className="min-h-screen bg-surface-container-lowest">
                 {/* Article Header */}
-                <header className="space-y-sm">
-                    <div className="inline-flex items-center gap-xs">
-                        <span className="bg-secondary/15 text-secondary border border-secondary/20 font-label-md text-[11px] px-3 py-1 rounded-full uppercase tracking-wider font-bold">
-                            {getStatic('category_label')}
-                        </span>
-                    </div>
-                    <h1 className="font-display text-display-lg text-white font-extrabold leading-tight">
-                        {t(article, 'title')}
-                    </h1>
-                    <div className="flex flex-wrap items-center gap-md text-sm text-on-surface-variant pt-2 border-t border-white/10">
-                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[18px]">person</span> {article.author}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1.5"><span className="material-symbols-outlined text-[18px]">calendar_month</span> {formatDate(article.created_at)}</span>
+                <header className="bg-neo-navy pt-32 pb-32 border-b-2 border-neo-border">
+                    <div className="max-w-[1000px] mx-auto px-margin-mobile md:px-margin-desktop text-center">
+                        <Link 
+                            href="/articles" 
+                            className="inline-flex items-center gap-2 border-2 border-neo-border px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-secondary/10 transition-colors mb-8"
+                        >
+                            <span className="material-symbols-outlined text-sm">arrow_back</span>
+                            {locale === 'id' ? 'Kembali ke Artikel' : 'Back to Articles'}
+                        </Link>
+                        
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <span className="neo-tag-amber">
+                                {locale === 'id' ? 'Berita' : 'News'}
+                            </span>
+                            <span className="font-mono text-[11px] text-white/40">
+                                {formatDate(article.created_at)}
+                            </span>
+                        </div>
+                        
+                        <h1 className="editorial-display text-white mb-6">
+                            {t(article, 'title')}
+                        </h1>
+                        
+                        <div className="flex items-center justify-center gap-4 text-sm font-mono text-white/60 mt-8">
+                            <div className="flex items-center gap-2">
+                                <span className="material-symbols-outlined text-sm">person</span>
+                                <span>{article.author}</span>
+                            </div>
+                            <span>•</span>
+                            <div className="flex items-center gap-2">
+                                <span className="material-symbols-outlined text-sm">schedule</span>
+                                <span>5 min read</span>
+                            </div>
+                        </div>
                     </div>
                 </header>
 
-                {/* Hero Image */}
-                <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl aspect-[16/9] bg-surface-container">
-                    <img 
-                        className="w-full h-full object-cover" 
-                        alt={t(article, 'title')} 
-                        src={article.thumbnail}
-                    />
-                </div>
-
-                {/* Article Description Summary */}
-                <div className="border-l-4 border-secondary pl-4 italic text-on-surface-variant font-sans text-body-lg my-md">
-                    {t(article, 'desc')}
-                </div>
-
-                {/* Article Body Content */}
-                <article className="prose prose-invert max-w-none font-sans text-body-md text-on-surface-variant leading-relaxed space-y-md my-md">
-                    {t(article, 'content').split('\n').map((para, index) => (
-                        <p key={index}>{para}</p>
-                    ))}
-                </article>
-
-                {/* Recent Articles at bottom */}
-                {recentArticles.length > 0 && (
-                    <section className="border-t border-white/10 pt-xl mt-xl space-y-lg">
-                        <h2 className="font-display text-headline-lg text-white font-bold">{getStatic('recent_title')}</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter">
-                            {recentArticles.filter(a => a.id !== article.id).slice(0, 2).map((a) => (
-                                <Link 
-                                    key={a.id}
-                                    href={`/articles/${a.slug}`}
-                                    className="bg-primary-container border border-white/10 rounded-2xl overflow-hidden shadow-lg group hover:-translate-y-1 transition-transform duration-300 flex flex-col p-md gap-sm"
-                                >
-                                    <div className="flex items-center gap-sm text-[12px] text-on-surface-variant font-semibold">
-                                        <span>{a.author}</span>
-                                        <span>•</span>
-                                        <span>{formatDate(a.created_at)}</span>
-                                    </div>
-                                    <h3 className="font-display text-headline-md text-white group-hover:text-secondary transition-colors line-clamp-2 font-semibold">
-                                        {t(a, 'title')}
-                                    </h3>
-                                    <p className="font-sans text-body-md text-on-surface-variant line-clamp-2">
-                                        {t(a, 'desc')}
-                                    </p>
-                                    <span className="inline-flex items-center gap-2 font-label-md text-sm text-secondary group-hover:text-secondary/80 mt-auto font-bold">
-                                        {getStatic('read_more')}
-                                        <span className="material-symbols-outlined text-sm">arrow_forward</span>
-                                    </span>
-                                </Link>
-                            ))}
+                {/* Main Content */}
+                <div className="max-w-[1000px] mx-auto px-margin-mobile md:px-margin-desktop -mt-16 relative z-10">
+                    {/* Featured Image */}
+                    <div className="w-full aspect-video border-2 border-neo-border shadow-neo-lg rounded-none bg-neo-navy mb-12">
+                        <img 
+                            src={article.thumbnail} 
+                            alt={t(article, 'title')} 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    
+                    {/* Article Body */}
+                    <article className="neo-card rounded-none p-8 md:p-12 prose prose-invert prose-lg max-w-none">
+                        <div className="border-l-4 border-secondary pl-4 italic text-white/60 font-sans text-body-lg my-md">
+                            {t(article, 'desc')}
                         </div>
-                    </section>
+                        <div dangerouslySetInnerHTML={{ __html: t(article, 'content') }} />
+                    </article>
+                </div>
+
+                {/* Other Articles Section */}
+                {recentArticles.length > 0 && (
+                    <div className="bg-neo-navy border-t-2 border-neo-border mt-20 py-xl">
+                        <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
+                            <h2 className="editorial-headline text-white mb-8">
+                                {locale === 'id' ? 'Artikel Lainnya' : 'Other Articles'}
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+                                {recentArticles.filter(a => a.id !== article.id).slice(0, 3).map((a) => (
+                                    <Link 
+                                        href={`/articles/${a.slug}`}
+                                        key={a.id}
+                                        className="neo-card rounded-none overflow-hidden flex flex-col group"
+                                    >
+                                        <div className="relative aspect-[16/10] overflow-hidden bg-neo-navy border-b-2 border-neo-border">
+                                            <div className="neo-tag-amber absolute top-3 left-3 z-10">
+                                                {getStatic('category_news')}
+                                            </div>
+                                            <img 
+                                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                                alt={t(a, 'title')} 
+                                                src={a.thumbnail}
+                                            />
+                                        </div>
+                                        <div className="p-md flex-1 flex flex-col gap-xs">
+                                            <div className="font-mono text-[11px] text-white/40 mb-2">
+                                                <span>{a.author}</span>
+                                                <span className="mx-2">•</span>
+                                                <span>{formatDate(a.created_at)}</span>
+                                            </div>
+                                            <h3 className="font-display text-xl text-white font-bold line-clamp-2 group-hover:text-secondary transition-colors">
+                                                {t(a, 'title')}
+                                            </h3>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 )}
-            </main>
+            </div>
         </PublicLayout>
     );
 }

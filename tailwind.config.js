@@ -15,6 +15,7 @@ export default {
             fontFamily: {
                 sans: ['Inter', ...defaultTheme.fontFamily.sans],
                 display: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
+                mono: ['JetBrains Mono', 'monospace'],
             },
             colors: {
                 'primary': '#abc7ff',
@@ -43,6 +44,17 @@ export default {
                 'on-surface-variant': '#c4c6d1',
                 'outline': '#8e909a',
                 'outline-variant': '#43474f',
+                'neo-navy': '#031A38',
+                'neo-amber': '#DCA100',
+                'neo-border': '#2A4A6B',
+                'accent-lime': '#BFFF00',
+            },
+            boxShadow: {
+                'neo-sm': '3px 3px 0px 0px #031A38',
+                'neo-md': '4px 4px 0px 0px #031A38',
+                'neo-lg': '6px 6px 0px 0px #031A38',
+                'neo-amber': '4px 4px 0px 0px #DCA100',
+                'neo-up': '0px -4px 0px 0px #031A38',
             },
             borderRadius: {
                 'DEFAULT': '1rem',

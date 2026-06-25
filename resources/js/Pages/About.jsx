@@ -72,11 +72,12 @@ export default function About({ chapters = [] }) {
             {/* Hero Section */}
             <section className="w-full pt-24 pb-16 px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
                 <div className="max-w-4xl">
-                    <h1 className="font-editorial-h1 text-white mb-8">
+                    <h1 className="editorial-display text-white mb-6">
                         {getStatic('hero_title')}<br/>
                         <span className="text-secondary">{getStatic('hero_sub')}</span>
                     </h1>
-                    <p className="font-sans text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
+                    <div className="neo-divider-accent mb-8"></div>
+                    <p className="font-sans text-body-lg text-white/60 max-w-2xl leading-relaxed">
                         {getStatic('hero_desc')}
                     </p>
                 </div>
@@ -86,24 +87,23 @@ export default function About({ chapters = [] }) {
             <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto relative">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
                     <div className="md:col-span-5 order-2 md:order-1 relative z-10">
-                        <div className="bg-primary-container/40 backdrop-blur-md p-md rounded-lg border border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-                            <h2 className="font-display text-display-lg text-white mb-6 font-bold">{getStatic('who_title')}</h2>
-                            <p className="font-sans text-body-md text-on-surface-variant mb-6">
+                        <div className="neo-card rounded-none p-8">
+                            <h2 className="editorial-headline text-white mb-6">{getStatic('who_title')}</h2>
+                            <p className="font-sans text-body-md text-white/60 mb-6">
                                 {getStatic('who_p1')}
                             </p>
-                            <p className="font-sans text-body-md text-on-surface-variant">
+                            <p className="font-sans text-body-md text-white/60">
                                 {getStatic('who_p2')}
                             </p>
                         </div>
                     </div>
                     <div className="md:col-span-8 md:-ml-xl order-1 md:order-2">
-                        <div className="aspect-[16/9] w-full rounded-xl overflow-hidden relative bg-surface-container">
+                        <div className="aspect-[16/9] w-full border-2 border-neo-border shadow-neo-lg overflow-hidden relative bg-neo-navy">
                             <img 
-                                className="w-full h-full object-cover" 
+                                className="w-full h-full object-cover opacity-80" 
                                 alt="Collaborating students" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQwbVJeBRfXNEQIa_r821N8UjP7GfHgZ14NOhkwl_CwlIbsTtYq9IMzWH8fFGI2lqJlEBGHQWBxM32S31ojIqovVi6fxK2BcfGTl3uVfZU8XbE7MaPhbIOnE4zyQGwkqsP0ELP3pAjtnoMVYwmWBeYzLC4u6vVs_pkfsGlj6_lORTbZyp8kzEqstuzT8kKCcXI3vGD5TGMrfnfJuk7HdKSbgfBOso2R74PSbUvRyZno8FRrl4EpMzCTRszKxFLjA0eBS4VUee50wE"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-r from-[#031A38] via-transparent to-transparent opacity-80 md:opacity-50"></div>
                         </div>
                     </div>
                 </div>
@@ -111,51 +111,54 @@ export default function About({ chapters = [] }) {
 
             {/* Bento Grid */}
             <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
-                <h2 className="font-display text-display-lg text-white mb-12 text-center font-bold">{getStatic('what_title')}</h2>
+                <h2 className="editorial-headline text-white mb-12 text-center">{getStatic('what_title')}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {/* Card 1 */}
-                    <div className="bg-primary-container p-md rounded-lg border border-white/10 hover:border-secondary/50 transition-colors group relative overflow-hidden h-80 flex flex-col justify-end">
-                        <div className="absolute inset-0 z-0">
+                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
+                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">01</div>
+                        <div className="absolute inset-0 z-0 bg-neo-navy">
                             <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
                                 alt="Digital Strategy" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6hez9UuW_jitx8jNX6cuf-FqkmVLQHoPCBk9OqddTcorEZylzR5BDRb36FdTVmpOmpoMKzm3Hwfxxw3USIcy589pADbotdrplXt1x1VtCR3wI-Q8hwuyScaj5wm7G034Nv1XsECa3V2YuyqRE6vOb1KnnFXdSrCQN7Qs8uQjRSgLyRUy3dg9ZHnWXjhdvP06bbOdq1FCKDdWd7NV7fMAl6CbedDLyFs0QyyeGVAXr46mdciSjRS11Y262eTfMthLCXIQwWdWVOxE"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#062D5F] to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
                         </div>
-                        <div className="relative z-10">
-                            <h3 className="font-display text-headline-md text-white mb-2 font-semibold">{getStatic('bento1_title')}</h3>
-                            <p className="font-sans text-body-md text-on-primary-container">{getStatic('bento1_desc')}</p>
+                        <div className="relative z-10 p-6">
+                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento1_title')}</h3>
+                            <p className="font-sans text-sm text-white/60">{getStatic('bento1_desc')}</p>
                         </div>
                     </div>
                     {/* Card 2 */}
-                    <div className="bg-primary-container p-md rounded-lg border border-white/10 hover:border-secondary/50 transition-colors group relative overflow-hidden h-80 flex flex-col justify-end">
-                        <div className="absolute inset-0 z-0">
+                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
+                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">02</div>
+                        <div className="absolute inset-0 z-0 bg-neo-navy">
                             <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
                                 alt="Media Production" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEMIaW_8A9ZmAgSTXGe-LrwEF0IKkcGwxx47m7kzvwJuXRJ15c2ZHDarZqJYzNY0QaK5vqzm8c7mmiLESMTSL8wGt9UBwlEYwz5XOryGMcM1P2y8ZumTI1kpagR-N1TqDsi8zMXE6unBuwvh4n3wAbpf6rXVO9uZgmYS5YXVGTlO30Sfpps5oTcuqWCI0SuxP-l-sFHDIFeNLb6ouCCtgwsdB9WUW5HL4CKoxoSjkZlYg_UtwC_Az72NBGVqsPUodkbTeiIX-O0Ts"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#062D5F] to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
                         </div>
-                        <div className="relative z-10">
-                            <h3 className="font-display text-headline-md text-white mb-2 font-semibold">{getStatic('bento2_title')}</h3>
-                            <p className="font-sans text-body-md text-on-primary-container">{getStatic('bento2_desc')}</p>
+                        <div className="relative z-10 p-6">
+                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento2_title')}</h3>
+                            <p className="font-sans text-sm text-white/60">{getStatic('bento2_desc')}</p>
                         </div>
                     </div>
                     {/* Card 3 */}
-                    <div className="bg-primary-container p-md rounded-lg border border-white/10 hover:border-secondary/50 transition-colors group relative overflow-hidden h-80 flex flex-col justify-end">
-                        <div className="absolute inset-0 z-0">
+                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
+                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">03</div>
+                        <div className="absolute inset-0 z-0 bg-neo-navy">
                             <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
                                 alt="Crisis Communication" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6iBfYFfJ4y9JuyyC2-FecJ5r1BAIK0_P203JNbWMQFg5y3wcBYxKc1p-FeHoKHKP1IoY3iVcC5yE6mpuJuyVXCgRC80g2_cpFJWwNormz3L3OGWcUxI7HHL_0boCmrxq9Sb5IrmrFj8LKCqlr63c5uqiTUtP6NXwFjqd7-guWp7-ip1wGk_FJHvf8zIIXptV4RDbik1z-LgBGyP4ezBR497AuQh6Vf--SjuRIPLK874ImohUDVPZY_J1mbNDqvjZVQ4IyqA7EdFE"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#062D5F] to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
                         </div>
-                        <div className="relative z-10">
-                            <h3 className="font-display text-headline-md text-white mb-2 font-semibold">{getStatic('bento3_title')}</h3>
-                            <p className="font-sans text-body-md text-on-primary-container">{getStatic('bento3_desc')}</p>
+                        <div className="relative z-10 p-6">
+                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento3_title')}</h3>
+                            <p className="font-sans text-sm text-white/60">{getStatic('bento3_desc')}</p>
                         </div>
                     </div>
                 </div>
@@ -163,27 +166,25 @@ export default function About({ chapters = [] }) {
 
             {/* Our Culture Section */}
             <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
-                <div className="relative rounded-2xl overflow-hidden bg-primary-container/30 border border-white/5">
-                    <div className="absolute inset-0 opacity-10 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-secondary via-transparent to-transparent"></div>
-                    <div className="relative z-10 p-lg md:p-xl flex flex-col md:flex-row gap-lg items-center">
+                <div className="neo-card rounded-none p-8 md:p-12">
+                    <div className="relative z-10 flex flex-col md:flex-row gap-lg items-center">
                         <div className="flex-1">
-                            <h2 className="font-display text-display-lg text-white mb-6 font-bold">{getStatic('culture_title')}</h2>
-                            <p className="font-sans text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                            <h2 className="editorial-headline text-white mb-6">{getStatic('culture_title')}</h2>
+                            <p className="font-sans text-body-md text-white/60 mb-6 leading-relaxed">
                                 {getStatic('culture_p1')}
                             </p>
-                            <p className="font-sans text-body-md text-on-surface-variant leading-relaxed">
+                            <p className="font-sans text-body-md text-white/60 leading-relaxed">
                                 {getStatic('culture_p2')}
                             </p>
                             <div className="mt-8 flex flex-wrap gap-4">
-                                <span className="px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-label-md text-sm border border-secondary/20 font-semibold">{getStatic('culture_tag1')}</span>
-                                <span className="px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-label-md text-sm border border-secondary/20 font-semibold">{getStatic('culture_tag2')}</span>
-                                <span className="px-4 py-1.5 rounded-full bg-secondary/10 text-secondary font-label-md text-sm border border-secondary/20 font-semibold">{getStatic('culture_tag3')}</span>
+                                <span className="neo-tag-amber">{getStatic('culture_tag1')}</span>
+                                <span className="neo-tag-amber">{getStatic('culture_tag2')}</span>
+                                <span className="neo-tag-amber">{getStatic('culture_tag3')}</span>
                             </div>
                         </div>
                         <div className="flex-1 w-full relative">
-                            <div className="aspect-square rounded-full bg-gradient-to-tr from-primary-container to-secondary/20 absolute -inset-4 blur-3xl opacity-30 animate-pulse"></div>
                             <img 
-                                className="w-full h-auto rounded-xl border border-white/10 shadow-2xl relative z-10" 
+                                className="w-full h-auto border-2 border-neo-border shadow-neo-lg relative z-10 rounded-none" 
                                 alt="Culture details" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7SwQxSNxdDkFCPpVtdsgd3ZNPxQh08RUaNg4W-QwTGBVj3FQzjf0QHBAyB3pylg1gU6Fe7jAVLzJXN3cSpSf11KyeNUZRlMXlvocl_tcWaZDb7kh5r2ddBUCSlEXrf2Col95olLaWsUtQMdY8anumJQSXGflARY4S0BqiLUboDg1Hz8OkMBnfSeSKRLEOumVxlilHyBvzhmhtrV9_3YeQFy9BtZcNn3ZL-JMW0MoH4Qf3s6QvZon-0mUSGLaf72Z5PiedN-lxEu4"
                             />
@@ -197,31 +198,31 @@ export default function About({ chapters = [] }) {
                 <section className="w-full py-xl bg-surface-container-lowest">
                     <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop space-y-lg">
                         <div className="space-y-xs text-center max-w-2xl mx-auto mb-12">
-                            <h2 className="font-display text-display-lg text-white font-bold">{getStatic('chapters_title')}</h2>
-                            <p className="font-sans text-body-md text-on-surface-variant">{getStatic('chapters_desc')}</p>
+                            <h2 className="editorial-headline text-white">{getStatic('chapters_title')}</h2>
+                            <p className="font-sans text-body-md text-white/60">{getStatic('chapters_desc')}</p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
                             {chapters.map((chapter) => (
                                 <div 
                                     key={chapter.id}
-                                    className="bg-primary-container border border-white/10 rounded-2xl overflow-hidden shadow-lg flex flex-col group hover:-translate-y-1 transition-transform duration-300"
+                                    className="neo-card rounded-none overflow-hidden flex flex-col"
                                 >
-                                    <div className="h-48 overflow-hidden bg-surface-container relative">
+                                    <div className="h-48 overflow-hidden bg-neo-navy relative border-b-2 border-neo-border">
                                         <img 
                                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                                             alt={t(chapter, 'name')} 
                                             src={chapter.photo}
                                         />
-                                        <div className="absolute top-4 right-4 bg-secondary/20 backdrop-blur-md border border-secondary/30 text-secondary px-3 py-1 rounded-full text-xs font-semibold">
+                                        <div className="absolute top-4 right-4 z-10 neo-tag-filled">
                                             {chapter.location}
                                         </div>
                                     </div>
                                     <div className="p-md flex flex-col flex-grow gap-sm">
-                                        <h3 className="font-display text-headline-md text-white font-bold">{t(chapter, 'name')}</h3>
-                                        <p className="font-sans text-body-md text-on-surface-variant text-sm line-clamp-4">
+                                        <h3 className="font-display text-lg text-white font-bold">{t(chapter, 'name')}</h3>
+                                        <p className="font-sans text-sm text-white/60 line-clamp-4">
                                             {t(chapter, 'desc')}
                                         </p>
-                                        <div className="mt-auto pt-md border-t border-white/5 flex justify-between items-center text-xs font-semibold text-on-primary-container">
+                                        <div className="mt-auto pt-md flex justify-between items-center text-xs font-semibold text-white/40">
                                             <span>Divisi: {chapter.division}</span>
                                         </div>
                                     </div>

@@ -51,121 +51,94 @@ export default function PublicIndex({ projects = [] }) {
         <PublicLayout>
             <Head title={locale === 'id' ? 'Koleksi Proyek - Humas Intern Unmul' : 'Projects Portfolio - Humas Intern Unmul'} />
 
-            <main className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
-                {/* Hero Section */}
-                <section className="mb-xl grid grid-cols-1 md:grid-cols-12 gap-gutter items-end">
-                    <div className="md:col-span-8 space-y-md">
-                        <h1 className="font-display text-display-lg text-white font-extrabold uppercase leading-tight">
-                            {getStatic('title')}
-                        </h1>
-                        <p className="font-sans text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
-                            {getStatic('desc')}
-                        </p>
-                    </div>
-                    <div className="md:col-span-4 flex justify-end">
-                        <div className="bg-secondary-container p-sm border-2 border-white/10 rounded-lg shadow-lg">
-                            <span className="font-label-md text-label-md text-[#031A38] font-bold">
-                                {getStatic('count_label')} {projects.length}+
-                            </span>
+            <div className="min-h-screen bg-surface-container-lowest">
+                {/* Header Section */}
+                <div className="bg-neo-navy pt-32 pb-16 border-b-2 border-neo-border">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-lg">
+                            <div className="max-w-2xl">
+                                <h1 className="editorial-display text-white mb-4">
+                                    {getStatic('title')}
+                                </h1>
+                                <p className="font-sans text-body-lg text-white/60">
+                                    {getStatic('desc')}
+                                </p>
+                            </div>
+                            
+                            {/* Search Box */}
+                            <div className="w-full md:w-80 flex items-center bg-primary-container border-2 border-neo-border rounded-none px-4 py-2 focus-within:border-secondary shadow-neo-sm transition-colors">
+                                <span className="material-symbols-outlined text-white/50 mr-2">search</span>
+                                <input 
+                                    type="text" 
+                                    placeholder={locale === 'id' ? 'Cari proyek...' : 'Search projects...'}
+                                    className="bg-transparent border-none focus:ring-0 text-white placeholder-white/40 w-full text-sm font-sans"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Category Tags */}
+                        <div className="flex flex-wrap gap-sm mt-xl">
+                            {['all', 'web', 'mobile', 'design'].map(tag => (
+                                <button 
+                                    key={tag}
+                                    onClick={() => setActiveFilter(tag)}
+                                    className={`border-2 px-4 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors ${
+                                        activeFilter === tag 
+                                            ? 'bg-secondary border-secondary text-neo-navy shadow-neo-sm' 
+                                            : 'border-neo-border text-white hover:bg-secondary/10'
+                                    }`}
+                                >
+                                    {tag === 'all' ? getStatic('filter_all') : tag}
+                                </button>
+                            ))}
                         </div>
                     </div>
-                </section>
-
-                {/* Filter Controls */}
-                <div className="flex flex-wrap gap-sm mb-lg">
-                    <button 
-                        onClick={() => setActiveFilter('all')}
-                        className={`px-6 py-2 rounded-full font-label-md text-label-md font-bold transition-all duration-200 cursor-pointer ${
-                            activeFilter === 'all' 
-                                ? 'bg-secondary text-[#031A38] shadow-md shadow-secondary/15' 
-                                : 'bg-transparent border-2 border-primary-container text-white hover:bg-primary-container'
-                        }`}
-                    >
-                        {getStatic('filter_all')}
-                    </button>
-                    <button 
-                        onClick={() => setActiveFilter('green')}
-                        className={`px-6 py-2 rounded-full font-label-md text-label-md font-bold transition-all duration-200 cursor-pointer ${
-                            activeFilter === 'green' 
-                                ? 'bg-secondary text-[#031A38] shadow-md shadow-secondary/15' 
-                                : 'bg-transparent border-2 border-primary-container text-white hover:bg-primary-container'
-                        }`}
-                    >
-                        Green Unmul
-                    </button>
-                    <button 
-                        onClick={() => setActiveFilter('publication')}
-                        className={`px-6 py-2 rounded-full font-label-md text-label-md font-bold transition-all duration-200 cursor-pointer ${
-                            activeFilter === 'publication' 
-                                ? 'bg-secondary text-[#031A38] shadow-md shadow-secondary/15' 
-                                : 'bg-transparent border-2 border-primary-container text-white hover:bg-primary-container'
-                        }`}
-                    >
-                        Publication
-                    </button>
-                    <button 
-                        onClick={() => setActiveFilter('campus')}
-                        className={`px-6 py-2 rounded-full font-label-md text-label-md font-bold transition-all duration-200 cursor-pointer ${
-                            activeFilter === 'campus' 
-                                ? 'bg-secondary text-[#031A38] shadow-md shadow-secondary/15' 
-                                : 'bg-transparent border-2 border-primary-container text-white hover:bg-primary-container'
-                        }`}
-                    >
-                        Campus
-                    </button>
                 </div>
 
                 {/* Projects Grid */}
-                {filteredProjects.length === 0 ? (
-                    <div className="py-20 text-center text-on-surface-variant">
-                        <p>{getStatic('empty_state')}</p>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-                        {filteredProjects.map((project) => (
-                            <div 
-                                key={project.id}
-                                className="group flex flex-col border border-white/10 rounded-2xl bg-primary-container overflow-hidden shadow-lg hover:-translate-y-1 transition-all duration-300"
-                            >
-                                <div className="relative h-64 overflow-hidden bg-surface-container">
-                                    <img 
-                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                        alt={t(project, 'title')} 
-                                        src={project.thumbnail}
-                                    />
-                                    <div className={`absolute top-4 right-4 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getCategoryBadgeClass(project.id)}`}>
-                                        {getCategory(project.id)}
-                                    </div>
-                                </div>
-                                <div className="p-md flex-grow flex flex-col justify-between gap-md">
-                                    <div className="space-y-sm">
-                                        <div className="flex items-center gap-xs text-secondary text-xs font-semibold">
-                                            <span className="material-symbols-outlined text-[18px]">location_on</span>
-                                            <span>{project.location}</span>
+                <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
+                    {filteredProjects.length === 0 ? (
+                        <div className="py-20 text-center text-white/60">
+                            <p>{getStatic('empty_state')}</p>
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+                            {filteredProjects.map((project) => (
+                                <Link 
+                                    key={project.id}
+                                    href={`/projects/${project.slug}`}
+                                    className="neo-card rounded-none overflow-hidden flex flex-col group"
+                                >
+                                    <div className="relative aspect-[16/10] overflow-hidden bg-neo-navy border-b-2 border-neo-border">
+                                        <div className="neo-tag-amber absolute top-3 left-3 z-10">
+                                            {getCategory(project.id)}
                                         </div>
-                                        <h3 className="font-display text-headline-md text-white font-bold leading-snug">
+                                        <img 
+                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                            alt={t(project, 'title')} 
+                                            src={project.thumbnail}
+                                        />
+                                    </div>
+                                    <div className="p-md flex-1 flex flex-col gap-xs">
+                                        <h3 className="font-display text-xl text-white font-bold group-hover:text-secondary transition-colors line-clamp-1">
                                             {t(project, 'title')}
                                         </h3>
-                                        <p className="font-sans text-body-md text-on-surface-variant line-clamp-3">
+                                        <p className="font-sans text-sm text-white/60 line-clamp-2 mt-2">
                                             {t(project, 'desc')}
                                         </p>
+                                        <div className="mt-4 pt-4 border-t border-neo-border flex justify-between items-center font-mono text-[11px] text-white/40">
+                                            <span>{project.location}</span>
+                                            <span className="flex items-center gap-1 hover:text-secondary transition-colors">
+                                                {getStatic('read_more')} <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="pt-md border-t border-white/5 flex justify-between items-center mt-auto">
-                                        <span className="text-xs font-semibold text-on-primary-container">{getStatic('partner_label')}: {project.partner}</span>
-                                        <Link 
-                                            href={`/projects/${project.slug}`} 
-                                            className="inline-flex items-center gap-1 font-label-md text-xs font-bold text-secondary hover:text-secondary/85 group/btn"
-                                        >
-                                            {getStatic('read_more')}
-                                            <span className="material-symbols-outlined text-sm group-hover/btn:translate-x-0.5 transition-transform">arrow_forward</span>
-                                        </Link>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </main>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            </div>
         </PublicLayout>
     );
 }

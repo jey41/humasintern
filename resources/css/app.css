@@ -32,3 +32,86 @@
         font-weight: 800;
     }
 }
+
+@layer utilities {
+    /* ═══════════════════════════════════════════
+       NEO-BRUTALISM UTILITIES
+       ═══════════════════════════════════════════ */
+
+    /* --- Cards --- */
+    .neo-card {
+      @apply border-2 border-neo-border bg-primary-container relative;
+      box-shadow: 4px 4px 0px 0px theme('colors.neo-navy');
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .neo-card:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0px 0px theme('colors.neo-navy');
+    }
+
+    /* --- Buttons --- */
+    .neo-btn {
+      @apply inline-flex items-center justify-center font-display font-bold
+             border-2 border-neo-border px-6 py-2.5 cursor-pointer
+             transition-all duration-150 active:translate-x-[2px]
+             active:translate-y-[2px] active:shadow-none;
+      box-shadow: 3px 3px 0px 0px theme('colors.neo-navy');
+    }
+    .neo-btn-primary {
+      @apply neo-btn bg-secondary text-neo-navy border-neo-navy;
+    }
+    .neo-btn-outline {
+      @apply neo-btn bg-transparent text-white border-neo-border;
+    }
+    .neo-btn-outline:hover {
+      @apply bg-primary-container/50;
+    }
+
+    /* --- Tags / Badges --- */
+    .neo-tag {
+      @apply inline-flex items-center gap-1 px-3 py-1 border-2 border-neo-border
+             font-mono text-[11px] uppercase tracking-widest font-bold;
+    }
+    .neo-tag-amber {
+      @apply neo-tag bg-secondary/15 text-secondary border-secondary/40;
+    }
+    .neo-tag-filled {
+      @apply neo-tag bg-secondary text-neo-navy border-neo-navy;
+    }
+
+    /* --- Section Dividers --- */
+    .neo-divider {
+      @apply w-full border-t-2 border-neo-border;
+    }
+    .neo-divider-accent {
+      @apply w-16 h-1 bg-secondary;
+    }
+
+    /* --- Editorial Typography --- */
+    .editorial-display {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      font-weight: 800;
+    }
+    .editorial-headline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      font-weight: 700;
+    }
+    .editorial-overline {
+      @apply font-mono text-[11px] uppercase tracking-[0.2em] font-bold text-secondary;
+    }
+
+    /* --- Micro-Animations --- */
+    @keyframes float-subtle {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
+    .animate-float {
+      animation: float-subtle 4s ease-in-out infinite;
+    }
+}

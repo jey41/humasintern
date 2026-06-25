@@ -26,33 +26,38 @@ export default function PublicIndex({ images = [] }) {
         <PublicLayout>
             <Head title={locale === 'id' ? 'Galeri Visual - Humas Intern Unmul' : 'Visual Gallery - Humas Intern Unmul'} />
 
-            <main className="w-full flex-grow pt-[120px] pb-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
+            <div className="min-h-screen bg-surface-container-lowest">
                 {/* Page Header */}
-                <header className="mb-lg">
-                    <h1 className="font-display text-display-lg text-white font-extrabold mb-xs tracking-tight">
-                        {getStatic('title')}
-                    </h1>
-                    <p className="font-sans text-body-lg text-on-surface-variant max-w-2xl">
-                        {getStatic('desc')}
-                    </p>
+                <header className="bg-neo-navy pt-32 pb-16 border-b-2 border-neo-border">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
+                        <div className="max-w-3xl mb-12">
+                            <h1 className="editorial-display text-white mb-4">
+                                {getStatic('title')}
+                            </h1>
+                            <p className="font-sans text-body-lg text-white/60">
+                                {getStatic('desc')}
+                            </p>
+                        </div>
+
+                        {/* FilterBar */}
+                        <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
+                            <button className="shrink-0 px-6 py-2 text-sm font-bold uppercase tracking-wider border-2 border-secondary bg-secondary text-neo-navy shadow-neo-sm transition-transform hover:translate-x-1 hover:-translate-y-1">
+                                {getStatic('filter_all')}
+                            </button>
+                            <button className="shrink-0 px-6 py-2 text-sm font-bold uppercase tracking-wider border-2 border-neo-border text-white hover:bg-secondary/10 transition-colors">
+                                {getStatic('filter_photos')}
+                            </button>
+                            <button className="shrink-0 px-6 py-2 text-sm font-bold uppercase tracking-wider border-2 border-neo-border text-white hover:bg-secondary/10 transition-colors">
+                                {getStatic('filter_videos')}
+                            </button>
+                        </div>
+                    </div>
                 </header>
 
-                {/* FilterBar */}
-                <div className="flex gap-sm overflow-x-auto pb-4 mb-lg hide-scrollbar snap-x border-b border-white/10">
-                    <button className="snap-start shrink-0 px-6 py-2 rounded-full font-label-md text-sm font-semibold bg-secondary text-[#031A38] shadow-md transition-transform hover:scale-[1.02] active:scale-95 cursor-pointer">
-                        {getStatic('filter_all')}
-                    </button>
-                    <button className="snap-start shrink-0 px-6 py-2 rounded-full font-label-md text-sm font-semibold bg-surface-variant/40 text-on-surface-variant border border-white/10 backdrop-blur-sm hover:bg-surface-variant/80 hover:text-white transition-all duration-300 cursor-pointer">
-                        {getStatic('filter_photos')}
-                    </button>
-                    <button className="snap-start shrink-0 px-6 py-2 rounded-full font-label-md text-sm font-semibold bg-surface-variant/40 text-on-surface-variant border border-white/10 backdrop-blur-sm hover:bg-surface-variant/80 hover:text-white transition-all duration-300 cursor-pointer">
-                        {getStatic('filter_videos')}
-                    </button>
-                </div>
-
                 {/* Dynamic Masonry Grid */}
+                <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
                 {images.length === 0 ? (
-                    <div className="py-20 text-center text-on-surface-variant">
+                    <div className="py-20 text-center text-white/60">
                         <p>{getStatic('empty_state')}</p>
                     </div>
                 ) : (
@@ -61,55 +66,53 @@ export default function PublicIndex({ images = [] }) {
                             <article 
                                 key={image.id}
                                 onClick={() => setActiveImage(image)}
-                                className="break-inside-avoid relative rounded-2xl overflow-hidden group border border-white/10 shadow-lg bg-surface-container-lowest cursor-pointer transition-all duration-300"
+                                className="break-inside-avoid relative neo-card rounded-none overflow-hidden group cursor-pointer flex flex-col"
                             >
                                 <img 
-                                    className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-105" 
+                                    className="w-full h-auto object-cover border-b-2 border-neo-border transition-transform duration-700 group-hover:scale-105" 
                                     alt={image.title || 'Gallery image'} 
                                     loading="lazy"
                                     src={image.url}
                                 />
-                                {/* Subtle hover overlay */}
-                                <div className="absolute inset-0 bg-surface-container-lowest/0 group-hover:bg-[#031A38]/50 transition-colors duration-300 pointer-events-none"></div>
-                                {/* Label that appears on hover */}
-                                <div className="absolute bottom-0 left-0 right-0 p-sm translate-y-full group-hover:translate-y-0 transition-transform duration-300 bg-gradient-to-t from-[#031A38] via-[#031A38]/80 to-transparent">
-                                    <h3 className="font-display text-headline-md text-white leading-tight font-bold">{image.title}</h3>
-                                    <p className="font-sans text-xs text-on-surface-variant mt-1 line-clamp-1">{image.caption}</p>
+                                <div className="p-4 bg-neo-navy flex-1">
+                                    <h3 className="font-display text-lg text-white font-bold mb-1 line-clamp-1 group-hover:text-secondary transition-colors">{image.title}</h3>
+                                    <p className="font-sans text-xs text-white/60 line-clamp-2">{image.caption}</p>
                                 </div>
                             </article>
                         ))}
                     </div>
                 )}
+                </div>
 
                 {/* Lightbox Modal */}
                 {activeImage && (
                     <div 
-                        className="fixed inset-0 z-50 flex items-center justify-center bg-[#031A38]/95 backdrop-blur-md p-md"
+                        className="fixed inset-0 z-50 flex items-center justify-center bg-neo-navy/95 backdrop-blur-sm p-4 md:p-8"
                         onClick={() => setActiveImage(null)}
                     >
                         <button 
-                            className="absolute top-4 right-4 text-white hover:text-secondary p-2 bg-white/5 rounded-full cursor-pointer transition-colors"
+                            className="absolute top-4 right-4 neo-card rounded-none p-2 text-white hover:text-secondary bg-neo-navy cursor-pointer transition-colors"
                             onClick={() => setActiveImage(null)}
                         >
                             <span className="material-symbols-outlined">close</span>
                         </button>
                         <div 
-                            className="relative max-w-4xl max-h-[85vh] flex flex-col items-center gap-md"
+                            className="relative max-w-4xl max-h-[85vh] flex flex-col items-center gap-4 neo-card rounded-none bg-neo-navy p-4 md:p-8"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <img 
-                                className="max-w-full max-h-[70vh] rounded-2xl border border-white/10 object-contain shadow-2xl" 
+                                className="max-w-full max-h-[60vh] border-2 border-neo-border object-contain" 
                                 src={activeImage.url} 
                                 alt={activeImage.title}
                             />
-                            <div className="text-center space-y-xs">
-                                <h3 className="text-xl font-bold text-white">{activeImage.title}</h3>
-                                <p className="text-sm text-on-surface-variant max-w-lg">{activeImage.caption}</p>
+                            <div className="text-left w-full mt-4">
+                                <h3 className="font-display text-xl font-bold text-white mb-2">{activeImage.title}</h3>
+                                <p className="font-sans text-sm text-white/60">{activeImage.caption}</p>
                             </div>
                         </div>
                     </div>
                 )}
-            </main>
+            </div>
         </PublicLayout>
     );
 }

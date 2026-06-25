@@ -46,67 +46,71 @@ export default function PublicIndex({ members = [], batches = [] }) {
         <PublicLayout>
             <Head title={locale === 'id' ? 'Batch Magang - Humas Intern Unmul' : 'Internship Batches - Humas Intern Unmul'} />
 
-            <main className="flex-grow w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-lg">
-                {/* Header & Description */}
-                <div className="mb-lg space-y-md">
-                    <div>
-                        <h1 className="font-display text-display-lg text-white font-extrabold tracking-tight mb-xs">
-                            {getStatic('title')}
-                        </h1>
-                        <p className="font-sans text-body-lg text-on-surface-variant max-w-3xl">
-                            {getStatic('desc')}
-                        </p>
-                    </div>
+            <div className="min-h-screen bg-surface-container-lowest">
+                {/* Header Section */}
+                <div className="bg-neo-navy pt-32 pb-16 border-b-2 border-neo-border">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
+                        <div className="max-w-3xl mb-12">
+                            <h1 className="editorial-display text-white mb-4">
+                                {getStatic('title')}
+                            </h1>
+                            <p className="font-sans text-body-lg text-white/60">
+                                {getStatic('desc')}
+                            </p>
+                        </div>
 
-                    {/* Batch Selection Tabs */}
-                    {batches.length === 0 ? (
-                        <div className="py-8 text-center text-on-surface-variant">
-                            <p>{getStatic('empty_batches')}</p>
-                        </div>
-                    ) : (
-                        <div className="flex flex-wrap gap-sm pt-sm border-b border-white/10 pb-md" id="batch-tabs-container">
-                            {batches.map((batch) => (
-                                <button
-                                    key={batch.id}
-                                    onClick={() => setSelectedBatchId(batch.id)}
-                                    className={`px-6 py-2.5 rounded-full font-label-md text-sm font-semibold transition-all duration-200 cursor-pointer ${
-                                        selectedBatchId === batch.id
-                                            ? 'bg-secondary text-[#031A38] shadow-lg shadow-secondary/15'
-                                            : 'bg-transparent border-2 border-primary-container text-white hover:bg-primary-container/30'
-                                    }`}
-                                >
-                                    {batch.name_id}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                        {/* Batch Selection Tabs */}
+                        {batches.length === 0 ? (
+                            <div className="py-8 text-white/60">
+                                <p>{getStatic('empty_batches')}</p>
+                            </div>
+                        ) : (
+                            <div className="flex flex-wrap gap-sm">
+                                {batches.map((batch) => (
+                                    <button
+                                        key={batch.id}
+                                        onClick={() => setSelectedBatchId(batch.id)}
+                                        className={`border-2 px-6 py-2 text-sm font-bold uppercase tracking-wider transition-colors ${
+                                            selectedBatchId === batch.id
+                                                ? 'bg-secondary border-secondary text-neo-navy shadow-neo-sm'
+                                                : 'border-neo-border text-white hover:bg-secondary/10'
+                                        }`}
+                                    >
+                                        {batch.name_id}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Batch Members Grid grouped by Division */}
+                <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-xl">
                 {selectedBatchId && activeMembers.length === 0 ? (
-                    <div className="py-20 text-center text-on-surface-variant border border-dashed border-white/10 rounded-2xl bg-primary-container/20">
-                        <p className="text-body-lg">{getStatic('empty_members')}</p>
+                    <div className="py-20 text-center text-white/60">
+                        <p>{getStatic('empty_members')}</p>
                     </div>
                 ) : (
-                    <div className="space-y-xl" id="batch-groups">
-                        {activeBatch && (
-                            <div className="mb-lg p-md rounded-2xl bg-primary-container/30 border border-white/5 flex flex-col md:flex-row items-center gap-md">
-                                <div className="w-full md:w-1/3 aspect-[4/3] rounded-xl overflow-hidden bg-surface-container">
+                    <div className="space-y-20">
+                        {activeBatch && activeBatch.photo && (
+                            <div className="neo-card rounded-none flex flex-col md:flex-row items-stretch border-2 border-neo-border">
+                                <div className="w-full md:w-2/5 border-b-2 md:border-b-0 md:border-r-2 border-neo-border bg-neo-navy">
                                     <img 
                                         className="w-full h-full object-cover" 
                                         src={activeBatch.photo} 
                                         alt={activeBatch.name_id} 
                                     />
                                 </div>
-                                <div className="flex-1 space-y-xs">
-                                    <span className="text-secondary text-xs uppercase font-bold tracking-widest">Active Batch</span>
-                                    <h2 className="font-display text-display-md text-white font-extrabold">{activeBatch.name_id}</h2>
-                                    <p className="font-sans text-body-md text-on-surface-variant leading-relaxed">
+                                <div className="flex-1 p-8 md:p-12 bg-white flex flex-col justify-center">
+                                    <span className="neo-tag-amber self-start mb-4">Active Batch</span>
+                                    <h2 className="editorial-headline text-neo-navy mb-4">{activeBatch.name_id}</h2>
+                                    <p className="font-sans text-neo-navy/70 leading-relaxed mb-6 max-w-2xl">
                                         {locale === 'id' ? activeBatch.desc_id : activeBatch.desc_en}
                                     </p>
-                                    <div className="pt-sm flex flex-wrap gap-md text-xs font-semibold text-on-primary-container">
-                                        <span>📍 Lokasi: {activeBatch.location}</span>
-                                        <span>⚙️ Fokus Utama: {activeBatch.division}</span>
+                                    <div className="flex flex-wrap gap-4 text-xs font-bold text-neo-navy/60 font-mono">
+                                        <span>LOC: {activeBatch.location}</span>
+                                        <span>|</span>
+                                        <span>FOCUS: {activeBatch.division}</span>
                                     </div>
                                 </div>
                             </div>
@@ -115,11 +119,10 @@ export default function PublicIndex({ members = [], batches = [] }) {
                         {Object.keys(groupedMembers).map((division) => {
                             const divisionMembers = groupedMembers[division];
                             return (
-                                <div key={division} className="space-y-md">
+                                <div key={division} className="space-y-8">
                                     {/* Division Header */}
-                                    <div className="flex items-center gap-sm border-b border-white/10 pb-xs">
-                                        <span className="w-2.5 h-2.5 rounded-full bg-secondary"></span>
-                                        <h2 className="font-display text-headline-lg text-white font-bold tracking-tight capitalize">
+                                    <div className="border-b-2 border-neo-border pb-4">
+                                        <h2 className="editorial-headline text-white capitalize">
                                             {division}
                                         </h2>
                                     </div>
@@ -129,35 +132,41 @@ export default function PublicIndex({ members = [], batches = [] }) {
                                         {divisionMembers.map((member) => (
                                             <div
                                                 key={member.id}
-                                                className="group relative bg-primary-container/50 backdrop-blur-md rounded-2xl border border-white/10 overflow-hidden hover:-translate-y-1 transition-transform duration-300 shadow-lg"
+                                                className="neo-card rounded-none flex flex-col bg-white overflow-hidden"
                                             >
-                                                <div className="aspect-[4/5] w-full relative overflow-hidden bg-surface-container-highest">
-                                                    <img
-                                                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                                        alt={member.name}
-                                                        src={member.photo}
-                                                    />
-                                                    <div className="absolute inset-0 bg-gradient-to-t from-[#031A38]/90 via-[#031A38]/20 to-transparent opacity-90"></div>
-                                                </div>
-                                                <div className="absolute bottom-0 left-0 w-full p-md">
-                                                    <div className="inline-flex items-center gap-xs px-3 py-1 bg-[#1D6B3A]/20 backdrop-blur-sm rounded-full mb-xs border border-[#1D6B3A]/30">
-                                                        <span className="w-2 h-2 rounded-full bg-[#1D6B3A]"></span>
-                                                        <span className="font-label-md text-xs text-[#abc7ff] font-semibold">{member.division}</span>
+                                                <div className="aspect-[4/5] w-full relative bg-neo-navy border-b-2 border-neo-border p-4 flex flex-col justify-end">
+                                                    {member.photo ? (
+                                                        <img
+                                                            className="absolute inset-0 w-full h-full object-cover"
+                                                            alt={member.name}
+                                                            src={member.photo}
+                                                        />
+                                                    ) : (
+                                                        <div className="absolute inset-0 flex items-center justify-center opacity-20">
+                                                            <span className="material-symbols-outlined text-6xl">person</span>
+                                                        </div>
+                                                    )}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-neo-navy/90 via-transparent to-transparent"></div>
+                                                    <div className="relative z-10">
+                                                        <span className="neo-tag-amber inline-block">
+                                                            {member.division}
+                                                        </span>
                                                     </div>
-                                                    <h3 className="font-display text-headline-md text-white font-bold">{member.name}</h3>
-                                                    <p className="font-sans text-body-md text-on-surface-variant text-sm mt-1">{member.role}</p>
+                                                </div>
+                                                <div className="p-4 flex-1 flex flex-col">
+                                                    <h3 className="font-display text-lg text-neo-navy font-bold leading-tight mb-1">{member.name}</h3>
+                                                    <p className="font-sans text-sm text-neo-navy/60">{member.role}</p>
 
                                                     {/* Social Details / Contact */}
-                                                    <div className="mt-2.5 flex items-center gap-sm text-[12px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-secondary">
+                                                    <div className="mt-4 pt-4 border-t-2 border-neo-border/10 flex items-center gap-3 text-neo-navy">
                                                         {member.email && (
-                                                            <a href={`mailto:${member.email}`} className="flex items-center gap-1 hover:text-white transition-colors" title={member.email}>
-                                                                <span className="material-symbols-outlined text-[16px]">mail</span>
+                                                            <a href={`mailto:${member.email}`} className="hover:text-secondary transition-colors" title={member.email}>
+                                                                <span className="material-symbols-outlined text-lg">mail</span>
                                                             </a>
                                                         )}
                                                         {member.instagram && (
-                                                            <a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 hover:text-white transition-colors" title={`@${member.instagram}`}>
-                                                                <span className="material-symbols-outlined text-[16px]">photo_camera</span>
-                                                                <span>@{member.instagram}</span>
+                                                            <a href={`https://instagram.com/${member.instagram}`} target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors" title={`@${member.instagram}`}>
+                                                                <span className="material-symbols-outlined text-lg">photo_camera</span>
                                                             </a>
                                                         )}
                                                     </div>
@@ -170,7 +179,8 @@ export default function PublicIndex({ members = [], batches = [] }) {
                         })}
                     </div>
                 )}
-            </main>
+                </div>
+            </div>
         </PublicLayout>
     );
 }

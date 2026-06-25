@@ -66,23 +66,23 @@ export default function PublicLayout({ children }) {
         <TranslationContext.Provider value={{ locale, setLocale, t }}>
             <div className="bg-[#031A38] text-on-surface min-h-screen flex flex-col font-sans selection:bg-secondary selection:text-on-secondary-container">
                 {/* TopNavBar */}
-                <header className="fixed top-0 w-full z-50 bg-primary-container/70 backdrop-blur-md border-b border-white/10 shadow-sm transition-all duration-300">
+                <header className="fixed top-0 w-full z-50 bg-neo-navy/90 backdrop-blur-lg border-b-2 border-neo-border shadow-sm transition-all duration-300">
                     <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-20">
                         {/* Brand Logo */}
-                        <Link href="/" className="flex items-center gap-xs cursor-pointer hover:opacity-85 transition-opacity">
+                        <Link href="/" className="flex items-center gap-xs cursor-pointer hover:opacity-85 hover:scale-[1.02] transition-transform">
                             <span className="material-symbols-outlined text-[32px] text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
                             <span className="font-headline-md text-headline-md font-bold text-secondary tracking-tight">Humas Intern Unmul</span>
                         </Link>
 
                         {/* Navigation Links */}
-                        <nav className="hidden md:flex gap-md">
+                        <nav className="hidden md:flex gap-md items-center">
                             <Link 
                                 href="/" 
                                 className={`${
                                     isRouteActive('/') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_home')}
                             </Link>
@@ -90,9 +90,9 @@ export default function PublicLayout({ children }) {
                                 href="/projects" 
                                 className={`${
                                     isRouteActive('/projects') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_projects')}
                             </Link>
@@ -100,9 +100,9 @@ export default function PublicLayout({ children }) {
                                 href="/articles" 
                                 className={`${
                                     isRouteActive('/articles') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_articles')}
                             </Link>
@@ -110,9 +110,9 @@ export default function PublicLayout({ children }) {
                                 href="/gallery" 
                                 className={`${
                                     isRouteActive('/gallery') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_gallery')}
                             </Link>
@@ -120,9 +120,9 @@ export default function PublicLayout({ children }) {
                                 href="/batch" 
                                 className={`${
                                     isRouteActive('/batch') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_members')}
                             </Link>
@@ -130,9 +130,9 @@ export default function PublicLayout({ children }) {
                                 href="/about" 
                                 className={`${
                                     isRouteActive('/about') 
-                                        ? 'text-secondary font-bold border-b-2 border-secondary pb-1' 
-                                        : 'text-on-primary-container opacity-80 hover:opacity-100 hover:text-secondary'
-                                } transition-all duration-200 font-body-md text-body-md`}
+                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
+                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
+                                } transition-all duration-200`}
                             >
                                 {getStaticText('nav_about')}
                             </Link>
@@ -143,7 +143,7 @@ export default function PublicLayout({ children }) {
                             {/* Bilingual Switch */}
                             <button 
                                 onClick={() => setLocale(locale === 'id' ? 'en' : 'id')}
-                                className="p-2 rounded-full hover:bg-white/5 transition-colors active:scale-95 flex items-center justify-center font-bold text-sm tracking-widest text-secondary cursor-pointer"
+                                className="neo-tag-filled cursor-pointer text-[10px]"
                                 title="Change Language"
                             >
                                 {locale.toUpperCase()}
@@ -161,7 +161,7 @@ export default function PublicLayout({ children }) {
                             {/* Admin Portal Login Link */}
                             <Link 
                                 href="/login" 
-                                className="hidden sm:inline-flex items-center justify-center px-6 py-2 bg-secondary text-[#031A38] hover:bg-secondary/90 transition-all font-label-md text-label-md rounded-full font-bold active:scale-95 shadow-md shadow-secondary/15"
+                                className="hidden sm:inline-flex neo-btn-primary rounded-none text-xs"
                             >
                                 {getStaticText('nav_login')}
                             </Link>
@@ -176,7 +176,7 @@ export default function PublicLayout({ children }) {
 
                 {/* Floating Campus Identity Badge */}
                 <div className="fixed bottom-gutter right-gutter z-40">
-                    <div className="bg-[#1D6B3A] text-white p-sm rounded shadow-lg flex items-center gap-sm border border-white/10">
+                    <div className="bg-[#1D6B3A] border-2 border-neo-navy shadow-neo-md rounded-none text-white p-sm flex items-center gap-sm">
                         <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
                         <div className="leading-tight">
                             <p className="font-label-md text-[10px] uppercase opacity-80">{getStaticText('affiliated')}</p>
@@ -186,7 +186,7 @@ export default function PublicLayout({ children }) {
                 </div>
 
                 {/* Footer */}
-                <footer className="w-full bg-primary-container text-on-primary-container border-t border-white/10 mt-auto">
+                <footer className="w-full bg-neo-navy border-t-2 border-neo-border text-white mt-auto">
                     <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-lg grid grid-cols-1 md:grid-cols-3 gap-gutter">
                         <div className="flex flex-col gap-sm">
                             <span className="font-headline-md text-headline-md font-bold text-secondary">Humas Intern Unmul</span>
@@ -196,31 +196,31 @@ export default function PublicLayout({ children }) {
                         </div>
                         <div className="grid grid-cols-2 gap-sm">
                             <div className="flex flex-col gap-2">
-                                <h4 className="text-white font-label-md text-label-md uppercase tracking-wider mb-xs">{getStaticText('footer_explore')}</h4>
-                                <Link href="/" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_home')}</Link>
-                                <Link href="/projects" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_projects')}</Link>
-                                <Link href="/articles" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_articles')}</Link>
+                                <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('footer_explore')}</h4>
+                                <Link href="/" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_home')}</Link>
+                                <Link href="/projects" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_projects')}</Link>
+                                <Link href="/articles" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_articles')}</Link>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <h4 className="text-white font-label-md text-label-md uppercase tracking-wider mb-xs">{getStaticText('footer_connect')}</h4>
-                                <Link href="/batch" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_members')}</Link>
-                                <Link href="/gallery" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_gallery')}</Link>
-                                <Link href="/about" className="text-on-primary-container/80 hover:text-secondary text-sm">{getStaticText('nav_about')}</Link>
+                                <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('footer_connect')}</h4>
+                                <Link href="/batch" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_members')}</Link>
+                                <Link href="/gallery" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_gallery')}</Link>
+                                <Link href="/about" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_about')}</Link>
                             </div>
                         </div>
                         <div className="flex flex-col gap-sm">
-                            <h4 className="text-white font-label-md text-label-md uppercase tracking-wider mb-xs">{getStaticText('newsletter_title')}</h4>
-                            <div className="flex rounded-full overflow-hidden border-2 border-secondary max-w-md bg-[#031A38]">
+                            <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('newsletter_title')}</h4>
+                            <div className="flex rounded-none overflow-hidden border-2 border-secondary max-w-md bg-[#031A38]">
                                 <input 
-                                    className="bg-transparent text-white px-md py-xs w-full focus:outline-none placeholder:text-on-primary-container/50 border-0 focus:ring-0 text-sm" 
+                                    className="bg-transparent text-white px-md py-xs w-full focus:outline-none placeholder:text-white/30 border-0 focus:ring-0 text-sm" 
                                     placeholder={getStaticText('newsletter_placeholder')} 
                                     type="email"
                                 />
-                                <button className="bg-secondary text-[#031A38] px-md font-label-md font-bold text-xs uppercase cursor-pointer hover:bg-secondary/90 transition-colors">
+                                <button className="neo-btn-primary rounded-none text-xs">
                                     {getStaticText('newsletter_btn')}
                                 </button>
                             </div>
-                            <p className="text-[12px] opacity-75 mt-sm">
+                            <p className="text-white/30 text-xs font-mono tracking-wide mt-sm">
                                 © 2026 Humas Universitas Mulawarman. All rights reserved.
                             </p>
                         </div>

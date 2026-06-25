@@ -47,115 +47,67 @@ export default function PublicShow({ project }) {
         <PublicLayout>
             <Head title={`${t(project, 'title')} - Humas Intern Unmul`} />
 
-            <main className="flex-grow w-full relative pt-12">
-                <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(circle_at_top_right,_#062d5f_0%,_transparent_40%)]"></div>
-                <article className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop pt-xl pb-xl relative z-10 space-y-lg">
-                    {/* Back Link */}
-                    <Link 
-                        href="/projects" 
-                        className="inline-flex items-center gap-2 text-secondary hover:text-secondary/80 font-bold text-sm w-fit group"
-                    >
-                        <span className="material-symbols-outlined text-sm group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
-                        {getStatic('back_btn')}
-                    </Link>
-
-                    {/* Header */}
-                    <header className="max-w-4xl space-y-md">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 rounded-full">
-                            <span className="w-2 h-2 rounded-full bg-secondary"></span>
-                            <span className="font-label-md text-xs text-secondary uppercase tracking-wider font-semibold">
-                                {getStatic('badge_label')}
+            <div className="min-h-screen bg-surface-container-lowest">
+                {/* Project Header */}
+                <header className="bg-neo-navy pt-32 pb-32 border-b-2 border-neo-border">
+                    <div className="max-w-[1000px] mx-auto px-margin-mobile md:px-margin-desktop text-center">
+                        <Link 
+                            href="/projects" 
+                            className="inline-flex items-center gap-2 border-2 border-neo-border px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-secondary/10 transition-colors mb-8"
+                        >
+                            <span className="material-symbols-outlined text-sm">arrow_back</span>
+                            {locale === 'id' ? 'Kembali ke Proyek' : 'Back to Projects'}
+                        </Link>
+                        
+                        <div className="flex items-center justify-center gap-3 mb-6">
+                            <span className="neo-tag-amber">
+                                {locale === 'id' ? 'Web Development' : 'Web Development'}
                             </span>
                         </div>
-                        <h1 className="font-display text-display-lg text-white font-extrabold leading-tight">
+                        
+                        <h1 className="editorial-display text-white mb-6">
                             {t(project, 'title')}
                         </h1>
-                        <p className="font-sans text-body-lg text-on-surface-variant leading-relaxed">
-                            {t(project, 'desc')}
-                        </p>
-                    </header>
-
-                    {/* Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start pt-md">
-                        {/* Sidebar Details */}
-                        <aside className="lg:col-span-3 lg:sticky lg:top-[120px] order-2 lg:order-1 bg-navy-glass rounded-2xl p-md">
-                            <h3 className="font-display text-headline-md text-white mb-lg pb-sm border-b border-white/10 font-bold">
-                                {getStatic('details_title')}
-                            </h3>
-                            <dl className="space-y-md">
-                                <div>
-                                    <dt className="font-label-md text-xs text-on-surface-variant mb-1 flex items-center gap-2 font-bold uppercase tracking-wider">
-                                        <span className="material-symbols-outlined text-[18px]">handshake</span> {getStatic('partner_label')}
-                                    </dt>
-                                    <dd className="font-sans text-body-md text-white">{project.partner}</dd>
-                                </div>
-                                <div>
-                                    <dt className="font-label-md text-xs text-on-surface-variant mb-1 flex items-center gap-2 font-bold uppercase tracking-wider">
-                                        <span className="material-symbols-outlined text-[18px]">location_on</span> {getStatic('location_label')}
-                                    </dt>
-                                    <dd className="font-sans text-body-md text-white">{project.location}</dd>
-                                </div>
-                                <div>
-                                    <dt className="font-label-md text-xs text-on-surface-variant mb-1 flex items-center gap-2 font-bold uppercase tracking-wider">
-                                        <span className="material-symbols-outlined text-[18px]">calendar_month</span> {getStatic('date_label')}
-                                    </dt>
-                                    <dd className="font-sans text-body-md text-white">
-                                        {formatDate(project.start_date)} - {formatDate(project.end_date)}
-                                    </dd>
-                                </div>
-                                <div>
-                                    <dt className="font-label-md text-xs text-on-surface-variant mb-1 flex items-center gap-2 font-bold uppercase tracking-wider">
-                                        <span className="material-symbols-outlined text-[18px]">groups</span> {getStatic('division_label')}
-                                    </dt>
-                                    <dd className="flex flex-wrap gap-2 mt-2">
-                                        <span className="px-3 py-1 bg-surface-container-high text-white text-xs font-semibold rounded-full">{getStatic('div_creative')}</span>
-                                        <span className="px-3 py-1 bg-surface-container-high text-white text-xs font-semibold rounded-full">{getStatic('div_journal')}</span>
-                                    </dd>
-                                </div>
-                            </dl>
-                        </aside>
-
-                        {/* Case Study Body */}
-                        <section className="lg:col-span-9 order-1 lg:order-2 space-y-lg">
-                            <figure className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/5 bg-surface-container aspect-video">
-                                <img 
-                                    className="w-full h-full object-cover" 
-                                    alt={t(project, 'title')} 
-                                    src={project.thumbnail}
-                                />
-                            </figure>
-
-                            <div className="space-y-md">
-                                <h2 className="font-display text-headline-lg text-white font-bold">{getStatic('challenge_title')}</h2>
-                                <div className="font-sans text-body-md text-on-surface-variant leading-relaxed space-y-md">
-                                    {t(project, 'content').split('\n').map((para, index) => (
-                                        <p key={index}>{para}</p>
-                                    ))}
-                                </div>
+                        
+                        <div className="flex flex-wrap items-center justify-center gap-6 text-sm font-mono text-white/60 mt-8">
+                            <div className="flex flex-col items-center">
+                                <span className="text-[10px] uppercase tracking-wider mb-1 opacity-50">Client</span>
+                                <span className="font-bold text-white">{project.partner}</span>
                             </div>
-
-                            {/* Impact Block */}
-                            <div className="bg-surface-container-low rounded-2xl p-lg border border-white/10 mt-xl">
-                                <h2 className="font-display text-headline-md text-white mb-md font-bold">{getStatic('results_title')}</h2>
-                                <ul className="space-y-4">
-                                    <li className="flex items-start gap-3">
-                                        <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                                        <span className="font-sans text-body-md text-on-surface-variant">{getStatic('impact1')}</span>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                                        <span className="font-sans text-body-md text-on-surface-variant">{getStatic('impact2')}</span>
-                                    </li>
-                                    <li className="flex items-start gap-3">
-                                        <span className="material-symbols-outlined text-secondary mt-1">check_circle</span>
-                                        <span className="font-sans text-body-md text-on-surface-variant">{getStatic('impact3')}</span>
-                                    </li>
-                                </ul>
+                            <span className="text-secondary/30">|</span>
+                            <div className="flex flex-col items-center">
+                                <span className="text-[10px] uppercase tracking-wider mb-1 opacity-50">Location</span>
+                                <span className="font-bold text-white">{project.location}</span>
                             </div>
-                        </section>
+                            <span className="text-secondary/30">|</span>
+                            <div className="flex flex-col items-center">
+                                <span className="text-[10px] uppercase tracking-wider mb-1 opacity-50">Year</span>
+                                <span className="font-bold text-white">2024</span>
+                            </div>
+                        </div>
                     </div>
-                </article>
-            </main>
+                </header>
+
+                {/* Main Content */}
+                <div className="max-w-[1000px] mx-auto px-margin-mobile md:px-margin-desktop -mt-16 relative z-10">
+                    {/* Featured Image */}
+                    <div className="w-full aspect-video border-2 border-neo-border shadow-neo-lg rounded-none bg-neo-navy mb-12">
+                        <img 
+                            src={project.thumbnail} 
+                            alt={t(project, 'title')} 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    
+                    {/* Project Body */}
+                    <article className="neo-card rounded-none p-8 md:p-12 prose prose-invert prose-lg max-w-none mb-20">
+                        <div className="border-l-4 border-secondary pl-4 italic text-white/60 font-sans text-body-lg my-md">
+                            {t(project, 'desc')}
+                        </div>
+                        <div dangerouslySetInnerHTML={{ __html: t(project, 'content') }} />
+                    </article>
+                </div>
+            </div>
         </PublicLayout>
     );
 }
