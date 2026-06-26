@@ -102,7 +102,7 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                             </div>
 
                             {/* Vertical Navigation (Right Side) */}
-                            <nav className="absolute right-6 md:right-10 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-end pointer-events-auto mix-blend-difference text-white">
+                            <nav className="absolute right-10 md:right-20 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-end pointer-events-auto mix-blend-difference text-white">
                                 {navItems.map((item, idx) => (
                                     <Link 
                                         key={item.path}
@@ -124,23 +124,23 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                             animate={{ y: 0, opacity: 1 }}
                             exit={{ y: -100, opacity: 0 }}
                             transition={{ duration: 0.5, ease: "easeInOut" }}
-                            className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-5xl px-4 pointer-events-none"
+                            className="fixed top-6 left-0 w-full z-50 flex justify-center px-10 pointer-events-none"
                         >
-                            <div className="flex items-center justify-between bg-black/40 backdrop-blur-xl border border-white/10 rounded-[24px] py-3 px-6 shadow-2xl pointer-events-auto">
-                                <Link href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+                            <div className="flex items-center gap-12 bg-black/40 backdrop-blur-xl border border-white/10 rounded-full py-3 px-8 shadow-2xl pointer-events-auto max-w-full">
+                                <Link href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity shrink-0">
                                     <img src="/images/logo/logo_unmul.png" alt="Unmul" className="h-8 w-auto object-contain" />
                                     <div className="w-px h-5 bg-white/20"></div>
                                     <img src="/images/logo/logo_humas.png" alt="Humas" className="h-6 w-auto object-contain" />
                                 </Link>
 
-                                <nav className="flex items-center gap-8">
+                                <nav className="flex items-center gap-8 shrink-0">
                                     {navItems.map((item) => (
                                         <Link 
                                             key={item.path}
                                             href={item.path}
                                             className="relative group py-2"
                                         >
-                                            <span className={`font-sans text-sm tracking-wide transition-colors duration-300 ${isRouteActive(item.path) ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
+                                            <span className={`font-sans text-sm tracking-wide transition-colors duration-300 whitespace-nowrap ${isRouteActive(item.path) ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
                                                 <TranslatedText locale={locale}>{item.label}</TranslatedText>
                                             </span>
                                             <span className={`absolute left-0 bottom-0 h-[1px] bg-white transition-all duration-300 ${isRouteActive(item.path) ? 'w-full opacity-100' : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-50'}`}></span>
@@ -148,7 +148,7 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                                     ))}
                                 </nav>
 
-                                <div className="flex items-center gap-6">
+                                <div className="flex items-center gap-6 shrink-0">
                                     <LanguageSwitcher locale={locale} setLocale={setLocale} layoutIdPrefix="scrolled" />
                                     <Link 
                                         href="/login" 
