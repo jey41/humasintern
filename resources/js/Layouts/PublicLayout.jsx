@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import CinematicNavigation from '@/Components/CinematicNavigation';
+import TranslatedText from '@/Components/Transitions/TranslatedText';
 
 // Create a simple custom Context for translation
 export const TranslationContext = React.createContext({
@@ -62,166 +64,70 @@ export default function PublicLayout({ children }) {
         return window.location.pathname === routePath;
     };
 
+    const navItems = [
+        { path: '/', label: getStaticText('nav_home') },
+        { path: '/projects', label: getStaticText('nav_projects') },
+        { path: '/articles', label: getStaticText('nav_articles') },
+        { path: '/gallery', label: getStaticText('nav_gallery') },
+        { path: '/batch', label: getStaticText('nav_members') },
+        { path: '/about', label: getStaticText('nav_about') },
+    ];
+
     return (
         <TranslationContext.Provider value={{ locale, setLocale, t }}>
-            <div className="bg-[#031A38] text-on-surface min-h-screen flex flex-col font-sans selection:bg-secondary selection:text-on-secondary-container">
-                {/* TopNavBar */}
-                <header className="fixed top-0 w-full z-50 bg-neo-navy/90 backdrop-blur-lg border-b-2 border-neo-border shadow-sm transition-all duration-300">
-                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop flex justify-between items-center h-20">
-                        {/* Brand Logo */}
-                        <Link href="/" className="flex items-center gap-xs cursor-pointer hover:opacity-85 hover:scale-[1.02] transition-transform">
-                            <span className="material-symbols-outlined text-[32px] text-secondary" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-                            <span className="font-headline-md text-headline-md font-bold text-secondary tracking-tight">Humas Intern Unmul</span>
-                        </Link>
-
-                        {/* Navigation Links */}
-                        <nav className="hidden md:flex gap-md items-center">
-                            <Link 
-                                href="/" 
-                                className={`${
-                                    isRouteActive('/') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_home')}
-                            </Link>
-                            <Link 
-                                href="/projects" 
-                                className={`${
-                                    isRouteActive('/projects') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_projects')}
-                            </Link>
-                            <Link 
-                                href="/articles" 
-                                className={`${
-                                    isRouteActive('/articles') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_articles')}
-                            </Link>
-                            <Link 
-                                href="/gallery" 
-                                className={`${
-                                    isRouteActive('/gallery') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_gallery')}
-                            </Link>
-                            <Link 
-                                href="/batch" 
-                                className={`${
-                                    isRouteActive('/batch') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_members')}
-                            </Link>
-                            <Link 
-                                href="/about" 
-                                className={`${
-                                    isRouteActive('/about') 
-                                        ? 'text-neo-navy bg-secondary px-3 py-1 rounded-none font-bold text-sm border-2 border-neo-navy shadow-neo-sm' 
-                                        : 'text-white/60 hover:text-secondary font-medium text-sm'
-                                } transition-all duration-200`}
-                            >
-                                {getStaticText('nav_about')}
-                            </Link>
-                        </nav>
-
-                        {/* Trailing Actions */}
-                        <div className="flex items-center gap-sm text-primary">
-                            {/* Bilingual Switch */}
-                            <button 
-                                onClick={() => setLocale(locale === 'id' ? 'en' : 'id')}
-                                className="neo-tag-filled cursor-pointer text-[10px]"
-                                title="Change Language"
-                            >
-                                {locale.toUpperCase()}
-                            </button>
-
-                            {/* Theme Switch */}
-                            <button 
-                                onClick={() => setDarkMode(!darkMode)}
-                                className="p-2 rounded-full hover:bg-white/5 transition-colors active:scale-95 flex items-center justify-center cursor-pointer"
-                                title="Toggle Theme"
-                            >
-                                <span className="material-symbols-outlined">{darkMode ? 'light_mode' : 'dark_mode'}</span>
-                            </button>
-
-                            {/* Admin Portal Login Link */}
-                            <Link 
-                                href="/login" 
-                                className="hidden sm:inline-flex neo-btn-primary rounded-none text-xs"
-                            >
-                                {getStaticText('nav_login')}
-                            </Link>
-                        </div>
-                    </div>
-                </header>
+            <div className="bg-[#050505] text-white min-h-screen flex flex-col font-sans selection:bg-white/20 selection:text-white">
+                
+                {/* Cinematic Hybrid Navigation */}
+                <CinematicNavigation 
+                    navItems={navItems} 
+                    loginText={getStaticText('nav_login')} 
+                    locale={locale} 
+                    setLocale={setLocale} 
+                />
 
                 {/* Main Content */}
-                <div className="flex-grow pt-20">
+                <div className="flex-grow animate-fade-in-up">
                     {children}
                 </div>
 
-                {/* Floating Campus Identity Badge */}
-                <div className="fixed bottom-gutter right-gutter z-40">
-                    <div className="bg-[#1D6B3A] border-2 border-neo-navy shadow-neo-md rounded-none text-white p-sm flex items-center gap-sm">
-                        <span className="material-symbols-outlined" style={{ fontVariationSettings: "'FILL' 1" }}>school</span>
-                        <div className="leading-tight">
-                            <p className="font-label-md text-[10px] uppercase opacity-80">{getStaticText('affiliated')}</p>
-                            <p className="font-label-md text-label-md font-bold tracking-tight">{getStaticText('campus')}</p>
-                        </div>
-                    </div>
-                </div>
 
                 {/* Footer */}
-                <footer className="w-full bg-neo-navy border-t-2 border-neo-border text-white mt-auto">
-                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-lg grid grid-cols-1 md:grid-cols-3 gap-gutter">
-                        <div className="flex flex-col gap-sm">
-                            <span className="font-headline-md text-headline-md font-bold text-secondary">Humas Intern Unmul</span>
-                            <p className="font-body-md text-body-md opacity-80 mt-2 max-w-sm">
-                                {getStaticText('footer_desc')}
+                <footer className="w-full bg-black border-t border-white/5 mt-32 relative z-10">
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-cinematic-padding grid grid-cols-1 md:grid-cols-3 gap-16">
+                        <div className="flex flex-col gap-6">
+                            <span className="font-sans text-xl font-medium tracking-wide">Humas Intern Unmul</span>
+                            <p className="font-sans text-white/50 leading-relaxed max-w-sm text-sm block">
+                                <TranslatedText locale={locale}>{getStaticText('footer_desc')}</TranslatedText>
                             </p>
                         </div>
-                        <div className="grid grid-cols-2 gap-sm">
-                            <div className="flex flex-col gap-2">
-                                <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('footer_explore')}</h4>
-                                <Link href="/" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_home')}</Link>
-                                <Link href="/projects" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_projects')}</Link>
-                                <Link href="/articles" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_articles')}</Link>
+                        <div className="grid grid-cols-2 gap-8">
+                            <div className="flex flex-col gap-4">
+                                <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30 mb-2"><TranslatedText locale={locale}>{getStaticText('footer_explore')}</TranslatedText></h4>
+                                <Link href="/" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_home')}</TranslatedText></Link>
+                                <Link href="/projects" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_projects')}</TranslatedText></Link>
+                                <Link href="/articles" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_articles')}</TranslatedText></Link>
                             </div>
-                            <div className="flex flex-col gap-2">
-                                <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('footer_connect')}</h4>
-                                <Link href="/batch" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_members')}</Link>
-                                <Link href="/gallery" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_gallery')}</Link>
-                                <Link href="/about" className="text-white/50 hover:text-secondary text-sm transition-colors">{getStaticText('nav_about')}</Link>
+                            <div className="flex flex-col gap-4">
+                                <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30 mb-2"><TranslatedText locale={locale}>{getStaticText('footer_connect')}</TranslatedText></h4>
+                                <Link href="/batch" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_members')}</TranslatedText></Link>
+                                <Link href="/gallery" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_gallery')}</TranslatedText></Link>
+                                <Link href="/about" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_about')}</TranslatedText></Link>
                             </div>
                         </div>
-                        <div className="flex flex-col gap-sm">
-                            <h4 className="editorial-overline text-secondary mb-xs">{getStaticText('newsletter_title')}</h4>
-                            <div className="flex rounded-none overflow-hidden border-2 border-secondary max-w-md bg-[#031A38]">
+                        <div className="flex flex-col gap-6">
+                            <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30"><TranslatedText locale={locale}>{getStaticText('newsletter_title')}</TranslatedText></h4>
+                            <div className="flex bg-white/5 rounded-full overflow-hidden border border-white/10 p-1">
                                 <input 
-                                    className="bg-transparent text-white px-md py-xs w-full focus:outline-none placeholder:text-white/30 border-0 focus:ring-0 text-sm" 
+                                    className="bg-transparent text-white px-6 w-full focus:outline-none placeholder:text-white/30 border-0 focus:ring-0 text-sm" 
                                     placeholder={getStaticText('newsletter_placeholder')} 
                                     type="email"
                                 />
-                                <button className="neo-btn-primary rounded-none text-xs">
-                                    {getStaticText('newsletter_btn')}
+                                <button className="cinematic-btn-primary py-2 px-6">
+                                    <TranslatedText locale={locale}>{getStaticText('newsletter_btn')}</TranslatedText>
                                 </button>
                             </div>
-                            <p className="text-white/30 text-xs font-mono tracking-wide mt-sm">
-                                © 2026 Humas Universitas Mulawarman. All rights reserved.
+                            <p className="text-white/30 text-[11px] tracking-widest uppercase mt-4 block">
+                                <TranslatedText locale={locale}>{locale === 'id' ? '© 2026 Humas Universitas Mulawarman.' : '© 2026 Public Relations Universitas Mulawarman.'}</TranslatedText>
                             </p>
                         </div>
                     </div>

@@ -1,9 +1,38 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { Head } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
+import TranslatedText from '@/Components/Transitions/TranslatedText';
 
 export default function About({ chapters = [] }) {
     const { locale, t } = useContext(TranslationContext);
+
+    // Fade-in scroll observer logic
+    const observerRefs = useRef([]);
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('opacity-100', 'translate-y-0');
+                        entry.target.classList.remove('opacity-0', 'translate-y-12');
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        observerRefs.current.forEach((ref) => {
+            if (ref) observer.observe(ref);
+        });
+
+        return () => observer.disconnect();
+    }, []);
+
+    const addToRefs = (el) => {
+        if (el && !observerRefs.current.includes(el)) {
+            observerRefs.current.push(el);
+        }
+    };
 
     const getStatic = (key) => {
         const text = {
@@ -55,7 +84,7 @@ export default function About({ chapters = [] }) {
             },
             culture_tag1: { id: 'Kolaboratif', en: 'Collaborative' },
             culture_tag2: { id: 'Inovatif', en: 'Innovative' },
-            culture_tag3: { id: 'Berorientasi Presisi', en: 'Precision-Driven' },
+            culture_tag3: { id: 'Presisi', en: 'Precision' },
             chapters_title: { id: 'Rekam Jejak Chapter', en: 'Chapter Milestones' },
             chapters_desc: {
                 id: 'Sejarah perkembangan tim Humas Intern dari masa ke masa.',
@@ -70,124 +99,136 @@ export default function About({ chapters = [] }) {
             <Head title={locale === 'id' ? 'Tentang Kami - Humas Intern Unmul' : 'About Us - Humas Intern Unmul'} />
 
             {/* Hero Section */}
-            <section className="w-full pt-24 pb-16 px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
-                <div className="max-w-4xl">
-                    <h1 className="editorial-display text-white mb-6">
-                        {getStatic('hero_title')}<br/>
-                        <span className="text-secondary">{getStatic('hero_sub')}</span>
-                    </h1>
-                    <div className="neo-divider-accent mb-8"></div>
-                    <p className="font-sans text-body-lg text-white/60 max-w-2xl leading-relaxed">
-                        {getStatic('hero_desc')}
-                    </p>
+            <section className="relative w-full py-40 px-margin-mobile md:px-margin-desktop bg-[#050505] overflow-hidden">
+                {/* Background ambient glow */}
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-[100px] pointer-events-none"></div>
+
+                <div className="max-w-[1280px] mx-auto relative z-10">
+                    <div className="max-w-4xl animate-fade-in-up">
+                        <h1 className="editorial-display text-white mb-8">
+                            <TranslatedText locale={locale}>{getStatic('hero_title')}</TranslatedText><br/>
+                            <span className="text-white/40"><TranslatedText locale={locale}>{getStatic('hero_sub')}</TranslatedText></span>
+                        </h1>
+                        <div className="cinematic-divider-accent mb-12"></div>
+                        <p className="font-sans text-xl text-white/60 max-w-2xl leading-relaxed block">
+                            <TranslatedText locale={locale}>{getStatic('hero_desc')}</TranslatedText>
+                        </p>
+                    </div>
                 </div>
             </section>
 
             {/* Who We Are Section */}
-            <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto relative">
-                <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter items-center">
-                    <div className="md:col-span-5 order-2 md:order-1 relative z-10">
-                        <div className="neo-card rounded-none p-8">
-                            <h2 className="editorial-headline text-white mb-6">{getStatic('who_title')}</h2>
-                            <p className="font-sans text-body-md text-white/60 mb-6">
-                                {getStatic('who_p1')}
-                            </p>
-                            <p className="font-sans text-body-md text-white/60">
-                                {getStatic('who_p2')}
-                            </p>
-                        </div>
+            <section className="w-full cinematic-section bg-[#050505]">
+                <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                    <div className="md:col-span-5 order-2 md:order-1 relative z-10 space-y-8">
+                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Esensi' : 'Essence'}</TranslatedText></span>
+                        <h2 className="editorial-headline text-white"><TranslatedText locale={locale}>{getStatic('who_title')}</TranslatedText></h2>
+                        <div className="w-12 h-px bg-white/30"></div>
+                        <p className="font-sans text-lg text-white/60 leading-relaxed block">
+                            <TranslatedText locale={locale}>{getStatic('who_p1')}</TranslatedText>
+                        </p>
+                        <p className="font-sans text-lg text-white/60 leading-relaxed block">
+                            <TranslatedText locale={locale}>{getStatic('who_p2')}</TranslatedText>
+                        </p>
                     </div>
-                    <div className="md:col-span-8 md:-ml-xl order-1 md:order-2">
-                        <div className="aspect-[16/9] w-full border-2 border-neo-border shadow-neo-lg overflow-hidden relative bg-neo-navy">
+                    <div className="md:col-span-7 order-1 md:order-2">
+                        <div className="aspect-[4/3] w-full rounded-3xl overflow-hidden relative group">
                             <img 
-                                className="w-full h-full object-cover opacity-80" 
+                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                                 alt="Collaborating students" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQwbVJeBRfXNEQIa_r821N8UjP7GfHgZ14NOhkwl_CwlIbsTtYq9IMzWH8fFGI2lqJlEBGHQWBxM32S31ojIqovVi6fxK2BcfGTl3uVfZU8XbE7MaPhbIOnE4zyQGwkqsP0ELP3pAjtnoMVYwmWBeYzLC4u6vVs_pkfsGlj6_lORTbZyp8kzEqstuzT8kKCcXI3vGD5TGMrfnfJuk7HdKSbgfBOso2R74PSbUvRyZno8FRrl4EpMzCTRszKxFLjA0eBS4VUee50wE"
+                                src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2968&auto=format&fit=crop"
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Bento Grid */}
-            <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
-                <h2 className="editorial-headline text-white mb-12 text-center">{getStatic('what_title')}</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <section className="w-full cinematic-section bg-[#080808] border-y border-white/5">
+                <div ref={addToRefs} className="opacity-0 translate-y-12 transition-all duration-1000 ease-out mb-16 text-center">
+                    <h2 className="editorial-headline text-white mb-4"><TranslatedText locale={locale}>{getStatic('what_title')}</TranslatedText></h2>
+                    <p className="text-white/50 font-sans block"><TranslatedText locale={locale}>{locale === 'id' ? 'Keahlian dan dedikasi kami dalam tiga pilar utama.' : 'Our expertise and dedication across three main pillars.'}</TranslatedText></p>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Card 1 */}
-                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
-                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">01</div>
-                        <div className="absolute inset-0 z-0 bg-neo-navy">
+                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-100">
+                        <div className="absolute inset-0 z-0">
                             <img 
-                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
                                 alt="Digital Strategy" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6hez9UuW_jitx8jNX6cuf-FqkmVLQHoPCBk9OqddTcorEZylzR5BDRb36FdTVmpOmpoMKzm3Hwfxxw3USIcy589pADbotdrplXt1x1VtCR3wI-Q8hwuyScaj5wm7G034Nv1XsECa3V2YuyqRE6vOb1KnnFXdSrCQN7Qs8uQjRSgLyRUy3dg9ZHnWXjhdvP06bbOdq1FCKDdWd7NV7fMAl6CbedDLyFs0QyyeGVAXr46mdciSjRS11Y262eTfMthLCXIQwWdWVOxE"
+                                src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2830&auto=format&fit=crop"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
                         </div>
-                        <div className="relative z-10 p-6">
-                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento1_title')}</h3>
-                            <p className="font-sans text-sm text-white/60">{getStatic('bento1_desc')}</p>
+                        <div className="relative z-10">
+                            <div className="text-white/30 font-sans tracking-widest text-sm mb-4">01</div>
+                            <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento1_title')}</TranslatedText></h3>
+                            <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento1_desc')}</TranslatedText></p>
                         </div>
                     </div>
                     {/* Card 2 */}
-                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
-                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">02</div>
-                        <div className="absolute inset-0 z-0 bg-neo-navy">
+                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-200">
+                        <div className="absolute inset-0 z-0">
                             <img 
-                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
                                 alt="Media Production" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEMIaW_8A9ZmAgSTXGe-LrwEF0IKkcGwxx47m7kzvwJuXRJ15c2ZHDarZqJYzNY0QaK5vqzm8c7mmiLESMTSL8wGt9UBwlEYwz5XOryGMcM1P2y8ZumTI1kpagR-N1TqDsi8zMXE6unBuwvh4n3wAbpf6rXVO9uZgmYS5YXVGTlO30Sfpps5oTcuqWCI0SuxP-l-sFHDIFeNLb6ouCCtgwsdB9WUW5HL4CKoxoSjkZlYg_UtwC_Az72NBGVqsPUodkbTeiIX-O0Ts"
+                                src="https://images.unsplash.com/photo-1601506521937-0121a7fc2a6b?q=80&w=2942&auto=format&fit=crop"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
                         </div>
-                        <div className="relative z-10 p-6">
-                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento2_title')}</h3>
-                            <p className="font-sans text-sm text-white/60">{getStatic('bento2_desc')}</p>
+                        <div className="relative z-10">
+                            <div className="text-white/30 font-sans tracking-widest text-sm mb-4">02</div>
+                            <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento2_title')}</TranslatedText></h3>
+                            <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento2_desc')}</TranslatedText></p>
                         </div>
                     </div>
                     {/* Card 3 */}
-                    <div className="neo-card rounded-none overflow-hidden h-80 flex flex-col justify-end relative group">
-                        <div className="absolute top-4 left-4 z-10 neo-tag-amber">03</div>
-                        <div className="absolute inset-0 z-0 bg-neo-navy">
+                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-300">
+                        <div className="absolute inset-0 z-0">
                             <img 
-                                className="w-full h-full object-cover opacity-30 group-hover:opacity-50 transition-opacity duration-500" 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
                                 alt="Crisis Communication" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6iBfYFfJ4y9JuyyC2-FecJ5r1BAIK0_P203JNbWMQFg5y3wcBYxKc1p-FeHoKHKP1IoY3iVcC5yE6mpuJuyVXCgRC80g2_cpFJWwNormz3L3OGWcUxI7HHL_0boCmrxq9Sb5IrmrFj8LKCqlr63c5uqiTUtP6NXwFjqd7-guWp7-ip1wGk_FJHvf8zIIXptV4RDbik1z-LgBGyP4ezBR497AuQh6Vf--SjuRIPLK874ImohUDVPZY_J1mbNDqvjZVQ4IyqA7EdFE"
+                                src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-neo-navy to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
                         </div>
-                        <div className="relative z-10 p-6">
-                            <h3 className="font-display text-xl text-white mb-2 font-bold">{getStatic('bento3_title')}</h3>
-                            <p className="font-sans text-sm text-white/60">{getStatic('bento3_desc')}</p>
+                        <div className="relative z-10">
+                            <div className="text-white/30 font-sans tracking-widest text-sm mb-4">03</div>
+                            <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento3_title')}</TranslatedText></h3>
+                            <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento3_desc')}</TranslatedText></p>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* Our Culture Section */}
-            <section className="w-full py-xl px-margin-mobile md:px-margin-desktop max-w-[1280px] mx-auto">
-                <div className="neo-card rounded-none p-8 md:p-12">
-                    <div className="relative z-10 flex flex-col md:flex-row gap-lg items-center">
-                        <div className="flex-1">
-                            <h2 className="editorial-headline text-white mb-6">{getStatic('culture_title')}</h2>
-                            <p className="font-sans text-body-md text-white/60 mb-6 leading-relaxed">
-                                {getStatic('culture_p1')}
+            <section className="w-full cinematic-section bg-[#050505]">
+                <div ref={addToRefs} className="cinematic-card p-12 md:p-20 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+                        <div className="space-y-8">
+                            <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Nilai Inti' : 'Core Values'}</TranslatedText></span>
+                            <h2 className="editorial-headline text-white"><TranslatedText locale={locale}>{getStatic('culture_title')}</TranslatedText></h2>
+                            <p className="font-sans text-lg text-white/60 leading-relaxed block">
+                                <TranslatedText locale={locale}>{getStatic('culture_p1')}</TranslatedText>
                             </p>
-                            <p className="font-sans text-body-md text-white/60 leading-relaxed">
-                                {getStatic('culture_p2')}
+                            <p className="font-sans text-lg text-white/60 leading-relaxed block">
+                                <TranslatedText locale={locale}>{getStatic('culture_p2')}</TranslatedText>
                             </p>
-                            <div className="mt-8 flex flex-wrap gap-4">
-                                <span className="neo-tag-amber">{getStatic('culture_tag1')}</span>
-                                <span className="neo-tag-amber">{getStatic('culture_tag2')}</span>
-                                <span className="neo-tag-amber">{getStatic('culture_tag3')}</span>
+                            <div className="flex flex-wrap gap-4 pt-4">
+                                <span className="cinematic-tag"><TranslatedText locale={locale}>{getStatic('culture_tag1')}</TranslatedText></span>
+                                <span className="cinematic-tag"><TranslatedText locale={locale}>{getStatic('culture_tag2')}</TranslatedText></span>
+                                <span className="cinematic-tag"><TranslatedText locale={locale}>{getStatic('culture_tag3')}</TranslatedText></span>
                             </div>
                         </div>
-                        <div className="flex-1 w-full relative">
+                        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
                             <img 
-                                className="w-full h-auto border-2 border-neo-border shadow-neo-lg relative z-10 rounded-none" 
+                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                                 alt="Culture details" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7SwQxSNxdDkFCPpVtdsgd3ZNPxQh08RUaNg4W-QwTGBVj3FQzjf0QHBAyB3pylg1gU6Fe7jAVLzJXN3cSpSf11KyeNUZRlMXlvocl_tcWaZDb7kh5r2ddBUCSlEXrf2Col95olLaWsUtQMdY8anumJQSXGflARY4S0BqiLUboDg1Hz8OkMBnfSeSKRLEOumVxlilHyBvzhmhtrV9_3YeQFy9BtZcNn3ZL-JMW0MoH4Qf3s6QvZon-0mUSGLaf72Z5PiedN-lxEu4"
+                                src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2940&auto=format&fit=crop"
                             />
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700"></div>
                         </div>
                     </div>
                 </div>
@@ -195,35 +236,36 @@ export default function About({ chapters = [] }) {
 
             {/* Chapters Database Integration */}
             {chapters.length > 0 && (
-                <section className="w-full py-xl bg-surface-container-lowest">
-                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop space-y-lg">
-                        <div className="space-y-xs text-center max-w-2xl mx-auto mb-12">
-                            <h2 className="editorial-headline text-white">{getStatic('chapters_title')}</h2>
-                            <p className="font-sans text-body-md text-white/60">{getStatic('chapters_desc')}</p>
+                <section className="w-full cinematic-section bg-[#080808] border-t border-white/5">
+                    <div ref={addToRefs} className="space-y-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                        <div className="text-center max-w-2xl mx-auto space-y-4">
+                            <h2 className="editorial-headline text-white"><TranslatedText locale={locale}>{getStatic('chapters_title')}</TranslatedText></h2>
+                            <p className="font-sans text-lg text-white/50 block"><TranslatedText locale={locale}>{getStatic('chapters_desc')}</TranslatedText></p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
-                            {chapters.map((chapter) => (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {chapters.map((chapter, idx) => (
                                 <div 
                                     key={chapter.id}
-                                    className="neo-card rounded-none overflow-hidden flex flex-col"
+                                    className={`cinematic-card flex flex-col opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
+                                    ref={addToRefs}
                                 >
-                                    <div className="h-48 overflow-hidden bg-neo-navy relative border-b-2 border-neo-border">
+                                    <div className="h-64 overflow-hidden relative">
                                         <img 
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
                                             alt={t(chapter, 'name')} 
-                                            src={chapter.photo}
+                                            src={chapter.photo || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop"}
                                         />
-                                        <div className="absolute top-4 right-4 z-10 neo-tag-filled">
+                                        <div className="absolute top-4 right-4 z-10 cinematic-tag bg-black/40 backdrop-blur-md text-white border-transparent">
                                             {chapter.location}
                                         </div>
                                     </div>
-                                    <div className="p-md flex flex-col flex-grow gap-sm">
-                                        <h3 className="font-display text-lg text-white font-bold">{t(chapter, 'name')}</h3>
-                                        <p className="font-sans text-sm text-white/60 line-clamp-4">
-                                            {t(chapter, 'desc')}
+                                    <div className="p-8 flex flex-col flex-grow gap-4">
+                                        <h3 className="font-sans text-2xl font-light text-white tracking-tight"><TranslatedText locale={locale}>{t(chapter, 'name')}</TranslatedText></h3>
+                                        <p className="font-sans text-sm text-white/50 leading-relaxed line-clamp-3 block">
+                                            <TranslatedText locale={locale}>{t(chapter, 'desc')}</TranslatedText>
                                         </p>
-                                        <div className="mt-auto pt-md flex justify-between items-center text-xs font-semibold text-white/40">
-                                            <span>Divisi: {chapter.division}</span>
+                                        <div className="mt-auto pt-6 border-t border-white/10 flex justify-between items-center text-xs font-sans tracking-widest uppercase text-white/40">
+                                            <span><TranslatedText locale={locale}>{locale === 'id' ? 'Divisi:' : 'Division:'}</TranslatedText> {chapter.division}</span>
                                         </div>
                                     </div>
                                 </div>

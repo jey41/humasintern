@@ -35,83 +35,105 @@
 
 @layer utilities {
     /* ═══════════════════════════════════════════
-       NEO-BRUTALISM UTILITIES
+       CINEMATIC STORYTELLING UTILITIES
        ═══════════════════════════════════════════ */
 
-    /* --- Cards --- */
-    .neo-card {
-      @apply border-2 border-neo-border bg-primary-container relative;
-      box-shadow: 4px 4px 0px 0px theme('colors.neo-navy');
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    /* --- Sections --- */
+    .cinematic-section {
+        @apply py-cinematic-padding max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop;
     }
-    .neo-card:hover {
-      transform: translate(-2px, -2px);
-      box-shadow: 6px 6px 0px 0px theme('colors.neo-navy');
+
+    /* --- Cards --- */
+    .cinematic-card {
+      @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl relative overflow-hidden;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+    .cinematic-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.5);
     }
 
     /* --- Buttons --- */
-    .neo-btn {
-      @apply inline-flex items-center justify-center font-display font-bold
-             border-2 border-neo-border px-6 py-2.5 cursor-pointer
-             transition-all duration-150 active:translate-x-[2px]
-             active:translate-y-[2px] active:shadow-none;
-      box-shadow: 3px 3px 0px 0px theme('colors.neo-navy');
+    .cinematic-btn {
+      @apply inline-flex items-center justify-center font-sans font-medium text-sm tracking-wide
+             px-8 py-3 rounded-full cursor-pointer overflow-hidden relative
+             transition-all duration-300;
     }
-    .neo-btn-primary {
-      @apply neo-btn bg-secondary text-neo-navy border-neo-navy;
+    .cinematic-btn::before {
+      content: '';
+      @apply absolute inset-0 bg-white/20 scale-x-0 origin-left transition-transform duration-300;
     }
-    .neo-btn-outline {
-      @apply neo-btn bg-transparent text-white border-neo-border;
+    .cinematic-btn:hover::before {
+      @apply scale-x-100;
     }
-    .neo-btn-outline:hover {
-      @apply bg-primary-container/50;
+    .cinematic-btn > * {
+      @apply relative z-10;
+    }
+    
+    .cinematic-btn-primary {
+      @apply cinematic-btn bg-white text-neo-navy;
+    }
+    .cinematic-btn-outline {
+      @apply cinematic-btn bg-transparent text-white border border-white/30;
+    }
+    .cinematic-btn-outline:hover {
+      @apply border-white bg-white/10;
     }
 
     /* --- Tags / Badges --- */
-    .neo-tag {
-      @apply inline-flex items-center gap-1 px-3 py-1 border-2 border-neo-border
-             font-mono text-[11px] uppercase tracking-widest font-bold;
+    .cinematic-tag {
+      @apply inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-white/20
+             bg-white/10 backdrop-blur-md font-sans text-xs tracking-wider uppercase text-white font-medium;
     }
-    .neo-tag-amber {
-      @apply neo-tag bg-secondary/15 text-secondary border-secondary/40;
+    .cinematic-tag-amber {
+      @apply cinematic-tag bg-secondary/15 text-secondary border-secondary/30;
     }
-    .neo-tag-filled {
-      @apply neo-tag bg-secondary text-neo-navy border-neo-navy;
+    .cinematic-tag-filled {
+      @apply cinematic-tag bg-white text-neo-navy border-transparent;
     }
 
     /* --- Section Dividers --- */
-    .neo-divider {
-      @apply w-full border-t-2 border-neo-border;
+    .cinematic-divider {
+      @apply w-full h-px bg-gradient-to-r from-transparent via-white/20 to-transparent;
     }
-    .neo-divider-accent {
-      @apply w-16 h-1 bg-secondary;
+    .cinematic-divider-accent {
+      @apply w-24 h-0.5 bg-gradient-to-r from-secondary to-transparent;
     }
 
     /* --- Editorial Typography --- */
     .editorial-display {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(2.5rem, 6vw, 5.5rem);
+      font-size: clamp(3rem, 8vw, 6rem);
       line-height: 1.05;
       letter-spacing: -0.04em;
-      font-weight: 800;
+      font-weight: 400;
     }
     .editorial-headline {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(1.5rem, 3.5vw, 2.5rem);
-      line-height: 1.15;
+      font-size: clamp(2rem, 4.5vw, 4rem);
+      line-height: 1.1;
       letter-spacing: -0.02em;
-      font-weight: 700;
+      font-weight: 400;
     }
     .editorial-overline {
-      @apply font-mono text-[11px] uppercase tracking-[0.2em] font-bold text-secondary;
+      @apply font-sans text-[12px] uppercase tracking-[0.2em] text-white/50 mb-4 block;
     }
 
     /* --- Micro-Animations --- */
-    @keyframes float-subtle {
-      0%, 100% { transform: translateY(0); }
-      50%      { transform: translateY(-6px); }
+    @keyframes fade-in-up {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
-    .animate-float {
-      animation: float-subtle 4s ease-in-out infinite;
+    .animate-fade-in-up {
+      animation: fade-in-up 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes image-zoom {
+      0% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+    .animate-image-zoom {
+      animation: image-zoom 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 }
