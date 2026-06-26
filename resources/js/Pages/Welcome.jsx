@@ -1,7 +1,40 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
+
+const CountUp = ({ end, duration = 2, suffix = '' }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    let startTime;
+                    const animateCount = (timestamp) => {
+                        if (!startTime) startTime = timestamp;
+                        const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
+                        const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                        setCount(Math.floor(easeOut * end));
+                        if (progress < 1) {
+                            requestAnimationFrame(animateCount);
+                        } else {
+                            setCount(end);
+                        }
+                    };
+                    requestAnimationFrame(animateCount);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.1 }
+        );
+        if (ref.current) observer.observe(ref.current);
+        return () => observer.disconnect();
+    }, [end, duration]);
+
+    return <span ref={ref}>{count}{suffix}</span>;
+};
 
 export default function Welcome({ recentArticles = [] }) {
     const { locale, t } = useContext(TranslationContext);
@@ -45,7 +78,7 @@ export default function Welcome({ recentArticles = [] }) {
                 en: 'Universitas Mulawarman. The voice of the institution, carving digital footprints, and connecting the campus with the world.'
             },
             hero_btn: { id: 'Jelajahi Cerita', en: 'Explore Stories' },
-            impact_num1: { id: 'Anggota Aktif', en: 'Active Members' },
+            impact_num1: { id: 'Alumni Magang Mahasiswa', en: 'Student Internship Alumni' },
             impact_num2: { id: 'Proyek Selesai', en: 'Projects Delivered' },
             impact_num3: { id: 'Artikel Publikasi', en: 'Published Articles' },
             timeline_title: { id: 'Perjalanan Kami', en: 'Our Journey' },
@@ -171,15 +204,15 @@ export default function Welcome({ recentArticles = [] }) {
             <section className="border-y border-white/5 bg-[#080808] py-24 my-cinematic-spacing">
                 <div ref={addToRefs} className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop grid grid-cols-1 md:grid-cols-3 gap-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="text-center flex flex-col items-center">
-                        <span className="text-7xl font-sans font-light text-white mb-4">42+</span>
+                        <span className="text-7xl font-sans font-light text-white mb-4"><CountUp end={42} suffix="+" /></span>
                         <span className="font-sans text-sm tracking-widest uppercase text-white/50"><TranslatedText locale={locale}>{getStatic('impact_num1')}</TranslatedText></span>
                     </div>
                     <div className="text-center flex flex-col items-center md:border-x border-white/10">
-                        <span className="text-7xl font-sans font-light text-white mb-4">120</span>
+                        <span className="text-7xl font-sans font-light text-white mb-4"><CountUp end={120} /></span>
                         <span className="font-sans text-sm tracking-widest uppercase text-white/50"><TranslatedText locale={locale}>{getStatic('impact_num2')}</TranslatedText></span>
                     </div>
                     <div className="text-center flex flex-col items-center">
-                        <span className="text-7xl font-sans font-light text-white mb-4">350</span>
+                        <span className="text-7xl font-sans font-light text-white mb-4"><CountUp end={350} /></span>
                         <span className="font-sans text-sm tracking-widest uppercase text-white/50"><TranslatedText locale={locale}>{getStatic('impact_num3')}</TranslatedText></span>
                     </div>
                 </div>
