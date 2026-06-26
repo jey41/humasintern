@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 import CinematicNavigation from '@/Components/CinematicNavigation';
+import CinematicFooter from '@/Components/CinematicFooter';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
 // Create a simple custom Context for translation
@@ -92,46 +93,7 @@ export default function PublicLayout({ children }) {
 
 
                 {/* Footer */}
-                <footer className="w-full bg-black border-t border-white/5 mt-32 relative z-10">
-                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-cinematic-padding grid grid-cols-1 md:grid-cols-3 gap-16">
-                        <div className="flex flex-col gap-6">
-                            <span className="font-sans text-xl font-medium tracking-wide">Humas Intern Unmul</span>
-                            <p className="font-sans text-white/50 leading-relaxed max-w-sm text-sm block">
-                                <TranslatedText locale={locale}>{getStaticText('footer_desc')}</TranslatedText>
-                            </p>
-                        </div>
-                        <div className="grid grid-cols-2 gap-8">
-                            <div className="flex flex-col gap-4">
-                                <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30 mb-2"><TranslatedText locale={locale}>{getStaticText('footer_explore')}</TranslatedText></h4>
-                                <Link href="/" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_home')}</TranslatedText></Link>
-                                <Link href="/projects" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_projects')}</TranslatedText></Link>
-                                <Link href="/articles" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_articles')}</TranslatedText></Link>
-                            </div>
-                            <div className="flex flex-col gap-4">
-                                <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30 mb-2"><TranslatedText locale={locale}>{getStaticText('footer_connect')}</TranslatedText></h4>
-                                <Link href="/batch" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_members')}</TranslatedText></Link>
-                                <Link href="/gallery" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_gallery')}</TranslatedText></Link>
-                                <Link href="/about" className="text-white/60 hover:text-white text-sm transition-colors block"><TranslatedText locale={locale}>{getStaticText('nav_about')}</TranslatedText></Link>
-                            </div>
-                        </div>
-                        <div className="flex flex-col gap-6">
-                            <h4 className="font-sans text-[11px] uppercase tracking-widest text-white/30"><TranslatedText locale={locale}>{getStaticText('newsletter_title')}</TranslatedText></h4>
-                            <div className="flex bg-white/5 rounded-full overflow-hidden border border-white/10 p-1">
-                                <input 
-                                    className="bg-transparent text-white px-6 w-full focus:outline-none placeholder:text-white/30 border-0 focus:ring-0 text-sm" 
-                                    placeholder={getStaticText('newsletter_placeholder')} 
-                                    type="email"
-                                />
-                                <button className="cinematic-btn-primary py-2 px-6">
-                                    <TranslatedText locale={locale}>{getStaticText('newsletter_btn')}</TranslatedText>
-                                </button>
-                            </div>
-                            <p className="text-white/30 text-[11px] tracking-widest uppercase mt-4 block">
-                                <TranslatedText locale={locale}>{locale === 'id' ? '© 2026 Humas Universitas Mulawarman.' : '© 2026 Public Relations Universitas Mulawarman.'}</TranslatedText>
-                            </p>
-                        </div>
-                    </div>
-                </footer>
+                <CinematicFooter getStaticText={getStaticText} navItems={navItems} />
             </div>
         </TranslationContext.Provider>
     );
