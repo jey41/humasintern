@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide scrollbar globally for a seamless cinematic experience */
+::-webkit-scrollbar {
+    display: none;
+}
+html, body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 @layer utilities {
     .glass-panel {
         @apply bg-primary-container/70 backdrop-blur-[16px] border border-white/10 shadow-lg;
