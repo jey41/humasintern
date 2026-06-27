@@ -139,7 +139,7 @@ export default function Welcome({ recentArticles = [] }) {
             <section className="cinematic-section bg-[#050505]">
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:col-span-5 space-y-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
-                        <h2 className="editorial-display text-white mb-6">
+                        <h2 className="editorial-headline text-white mb-6">
                             <TranslatedText locale={locale}>{locale === 'id' ? 'Membangun Jembatan Informasi' : 'Building Bridges of Information'}</TranslatedText>
                         </h2>
                         <div className="w-12 h-px bg-white/30"></div>
