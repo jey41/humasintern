@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Head } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
@@ -38,6 +39,34 @@ const getInstagramEmbedUrl = (url) => {
             cleanUrl += '/';
         }
         return `${cleanUrl}embed/`;
+    } catch(e) {
+        return url;
+    }
+};
+
+// Helper to get clean google drive embed url
+const getGDriveEmbedUrl = (url) => {
+    if (!url) return '';
+    return url.replace('/view?usp=sharing', '/preview').replace('/view', '/preview');
+};
+
+// Helper to get clean youtube embed url
+const getYoutubeEmbedUrl = (url) => {
+    if (!url) return '';
+    try {
+        let videoId = '';
+        if (url.includes('youtu.be/')) {
+            videoId = url.split('youtu.be/')[1].split('?')[0];
+        } else if (url.includes('youtube.com/watch')) {
+            const urlObj = new URL(url);
+            videoId = urlObj.searchParams.get('v');
+        }
+        
+        if (videoId) {
+            // rel=0 hides related videos from other channels, modestbranding hides the YT logo, autoplay starts the video
+            return `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&autoplay=1`;
+        }
+        return url;
     } catch(e) {
         return url;
     }
@@ -212,7 +241,8 @@ export default function PublicIndex({ images = [] }) {
                                                 <CinematicImage 
                                                     src={img.media_type === 'video' ? img.thumbnail : img.media_url} 
                                                     alt={img.title} 
-                                                    className="w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
+                                                    aspectClass="aspect-[4/5] md:aspect-[3/4] bg-white/5"
+                                                    className="w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
                                                 />
                                                 {img.media_type === 'video' && (
                                                     <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-transform duration-500 group-hover:scale-110">
@@ -239,8 +269,9 @@ export default function PublicIndex({ images = [] }) {
             </div>
 
             {/* 4. Fullscreen Lightbox Experience (0px border radius, edge-to-edge gallery feel) */}
-            <AnimatePresence>
-                {lightboxIndex !== null && (
+            {typeof window !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {lightboxIndex !== null && (
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -300,6 +331,26 @@ export default function PublicIndex({ images = [] }) {
                                             allow="encrypted-media"
                                         ></iframe>
                                     </div>
+                                ) : images[lightboxIndex].media_type === 'video' && images[lightboxIndex].media_source === 'gdrive' ? (
+                                    <div className="w-full max-w-[900px] aspect-video bg-black rounded-xl overflow-hidden relative shadow-2xl border border-white/10" onClick={(e) => e.stopPropagation()}>
+                                        <iframe 
+                                            src={getGDriveEmbedUrl(images[lightboxIndex].media_url)}
+                                            className="w-full h-full"
+                                            frameBorder="0"
+                                            allow="autoplay; fullscreen"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
+                                ) : images[lightboxIndex].media_type === 'video' && images[lightboxIndex].media_source === 'youtube' ? (
+                                    <div className="w-full max-w-[900px] aspect-video bg-black rounded-xl overflow-hidden relative shadow-2xl border border-white/10" onClick={(e) => e.stopPropagation()}>
+                                        <iframe 
+                                            src={getYoutubeEmbedUrl(images[lightboxIndex].media_url)}
+                                            className="w-full h-full"
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </div>
                                 ) : (
                                     <img 
                                         src={images[lightboxIndex].media_url} 
@@ -332,8 +383,10 @@ export default function PublicIndex({ images = [] }) {
                             </motion.div>
                         </div>
                     </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </PublicLayout>
     );
 }
