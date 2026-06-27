@@ -138,9 +138,8 @@ export default function Welcome({ recentArticles = [] }) {
             {/* SECTION 2: EDITORIAL SPLIT (0px border radius) */}
             <section className="cinematic-section bg-[#050505]">
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-                    <div className="md:col-span-5 space-y-8">
-                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Identitas' : 'Identity'}</TranslatedText></span>
-                        <h2 className="editorial-headline text-white">
+                    <div className="md:col-span-5 space-y-8 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
+                        <h2 className="editorial-display text-white mb-6">
                             <TranslatedText locale={locale}>{locale === 'id' ? 'Membangun Jembatan Informasi' : 'Building Bridges of Information'}</TranslatedText>
                         </h2>
                         <div className="w-12 h-px bg-white/30"></div>
@@ -195,14 +194,13 @@ export default function Welcome({ recentArticles = [] }) {
                             />
                         </div>
                         <div className="space-y-6">
-                            <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Strategi Digital' : 'Digital Strategy'}</TranslatedText></span>
                             <h3 className="text-4xl font-sans font-light tracking-tight text-white mb-6">
                                 <TranslatedText locale={locale}>{locale === 'id' ? 'Orkestrasi Presensi Daring' : 'Orchestrating Online Presence'}</TranslatedText>
                             </h3>
                             <p className="text-lg text-white/50 leading-relaxed font-sans block">
                                 <TranslatedText locale={locale}>{locale === 'id' 
-                                    ? 'Mengkurasi setiap unggahan, memastikan suara institusi terdengar dengan jernih, profesional, dan berwibawa di setiap platform media sosial.'
-                                    : 'Curating every post, ensuring the institution\'s voice is heard clearly, professionally, and authoritatively across all social media platforms.'}</TranslatedText>
+                                    ? 'Sebagai bagian dari strategi digital, kami mengkurasi setiap unggahan, memastikan suara institusi terdengar dengan jernih, profesional, dan berwibawa di setiap platform media sosial.'
+                                    : 'As part of our digital strategy, we curate every post, ensuring the institution\'s voice is heard clearly, professionally, and authoritatively across all social media platforms.'}</TranslatedText>
                             </p>
                         </div>
                     </div>
@@ -210,14 +208,13 @@ export default function Welcome({ recentArticles = [] }) {
                     {/* Row 2: Content Left, Image Right */}
                     <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                         <div className="order-2 md:order-1 space-y-6">
-                            <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Produksi Media' : 'Media Production'}</TranslatedText></span>
                             <h3 className="text-4xl font-sans font-light tracking-tight text-white mb-6">
                                 <TranslatedText locale={locale}>{locale === 'id' ? 'Menangkap Esensi' : 'Capturing the Essence'}</TranslatedText>
                             </h3>
                             <p className="text-lg text-white/50 leading-relaxed font-sans block">
                                 <TranslatedText locale={locale}>{locale === 'id' 
-                                    ? 'Lewat lensa kamera, kami membekukan momen-momen bersejarah, mengubah acara rutin menjadi dokumentasi sinematik yang memukau.'
-                                    : 'Through the camera lens, we freeze historic moments, turning routine events into stunning cinematic documentation.'}</TranslatedText>
+                                    ? 'Dalam produksi media, lewat lensa kamera, kami membekukan momen-momen bersejarah, mengubah acara rutin menjadi dokumentasi sinematik yang memukau.'
+                                    : 'In our media production, through the camera lens, we freeze historic moments, turning routine events into stunning cinematic documentation.'}</TranslatedText>
                             </p>
                         </div>
                         <div className="order-1 md:order-2 aspect-[4/3] overflow-hidden rounded-none">
@@ -305,7 +302,6 @@ export default function Welcome({ recentArticles = [] }) {
                 
                 <div ref={addToRefs} className="relative z-20 max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop w-full flex justify-end opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:w-[40%] space-y-8 pl-8 md:pl-0">
-                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Fokus Proyek' : 'Project Focus'}</TranslatedText></span>
                         <h2 className="editorial-headline text-white">
                             <TranslatedText locale={locale}>{locale === 'id' ? 'Publikasi Majalah Kampus' : 'Campus Magazine Publication'}</TranslatedText>
                         </h2>

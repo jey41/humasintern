@@ -93,9 +93,8 @@ export default function PublicIndex({ projects = [] }) {
 
                 <div className="max-w-[1280px] mx-auto relative z-10 animate-fade-in-up">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12">
-                        <div className="max-w-2xl">
-                            <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Portofolio' : 'Portfolio'}</TranslatedText></span>
-                            <h1 className="editorial-display text-white mb-6">
+                        <div className="max-w-2xl mt-12 md:mt-24">
+                            <h1 className="editorial-display text-white mb-6 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                                 <TranslatedText locale={locale}>{getStatic('title')}</TranslatedText>
                             </h1>
                             <p className="font-sans text-xl text-white/60 leading-relaxed block">

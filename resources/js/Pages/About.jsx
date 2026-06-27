@@ -141,7 +141,6 @@ export default function About({ chapters = [] }) {
             <section className="w-full cinematic-section bg-[#050505]">
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:col-span-5 order-2 md:order-1 relative z-10 space-y-8">
-                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Esensi' : 'Essence'}</TranslatedText></span>
                         <h2 className="editorial-headline text-white"><TranslatedText locale={locale}>{getStatic('who_title')}</TranslatedText></h2>
                         <div className="w-12 h-px bg-white/30"></div>
                         <p className="font-sans text-lg text-white/60 leading-relaxed block">
@@ -232,7 +231,6 @@ export default function About({ chapters = [] }) {
                 <div ref={addToRefs} className="bg-transparent py-12 md:py-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
                         <div className="space-y-8">
-                            <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Nilai Inti' : 'Core Values'}</TranslatedText></span>
                             <h2 className="editorial-headline text-white"><TranslatedText locale={locale}>{getStatic('culture_title')}</TranslatedText></h2>
                             <p className="font-sans text-lg text-white/60 leading-relaxed block">
                                 <TranslatedText locale={locale}>{getStatic('culture_p1')}</TranslatedText>

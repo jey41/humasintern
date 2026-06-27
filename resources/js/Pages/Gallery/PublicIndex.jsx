@@ -102,14 +102,7 @@ export default function PublicIndex({ images = [] }) {
                 
                 {/* Hero Content */}
                 <div className="relative z-10 max-w-[1280px] w-full mx-auto px-margin-mobile md:px-margin-desktop text-center">
-                    <motion.span 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                        className="editorial-overline text-white/70 tracking-[0.3em] mb-6 block"
-                    >
-                        <TranslatedText locale={locale}>{getStatic('subtitle')}</TranslatedText>
-                    </motion.span>
+
                     <motion.h1 
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}

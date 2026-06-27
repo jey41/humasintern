@@ -91,7 +91,6 @@ export default function PublicIndex({ members = [], batches = [] }) {
 
                 <div className="max-w-[1280px] mx-auto relative z-10 animate-fade-in-up">
                     <div className="max-w-4xl mb-16">
-                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Arsip Talenta' : 'Talent Archive'}</TranslatedText></span>
                         <h1 className="editorial-display text-white mb-6">
                             <TranslatedText locale={locale}>{getStatic('title')}</TranslatedText>
                         </h1>
