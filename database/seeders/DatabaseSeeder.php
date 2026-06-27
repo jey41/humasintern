@@ -360,6 +360,22 @@ class DatabaseSeeder extends Seeder
             ]
         ]);
 
+        // Insert 20 dummy images for Parallax Photo Wall
+        $dummyImages = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $dummyImages[] = [
+                'media_url' => "https://picsum.photos/seed/paralax{$i}/800/1200",
+                'media_type' => 'image',
+                'media_source' => 'local',
+                'thumbnail' => null,
+                'title' => "Moment Ke-{$i}",
+                'caption' => "Dokumentasi visual berkualitas tinggi dari sudut pandang editorial yang estetis dan berkelas.",
+                'created_at' => now()->subDays(rand(1, 30)),
+                'updated_at' => now(),
+            ];
+        }
+        GalleryImage::insert($dummyImages);
+
         // 7. Seed Contact Submissions
         ContactSubmission::truncate();
         ContactSubmission::insert([
