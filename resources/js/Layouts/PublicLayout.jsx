@@ -20,7 +20,8 @@ export default function PublicLayout({ children }) {
     const footerRef = useRef(null);
 
     useEffect(() => {
-        if (!footerRef.current) return;
+        const footerEl = document.getElementById('parallax-footer');
+        if (!footerEl) return;
         
         const resizeObserver = new ResizeObserver((entries) => {
             for (let entry of entries) {
@@ -28,7 +29,7 @@ export default function PublicLayout({ children }) {
             }
         });
         
-        resizeObserver.observe(footerRef.current);
+        resizeObserver.observe(footerEl);
         return () => resizeObserver.disconnect();
     }, []);
 
@@ -113,9 +114,8 @@ export default function PublicLayout({ children }) {
                 </div>
 
                 {/* Bottom Layer: Fixed Parallax Footer */}
-                <div className="fixed bottom-0 left-0 w-full z-0">
+                <div id="parallax-footer" className="fixed bottom-0 left-0 w-full z-0">
                     <CinematicFooter 
-                        ref={footerRef}
                         getStaticText={getStaticText} 
                         navItems={navItems} 
                     />
