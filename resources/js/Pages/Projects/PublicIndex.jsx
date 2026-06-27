@@ -3,6 +3,26 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
+
 export default function PublicIndex({ projects = [] }) {
     const { locale, t } = useContext(TranslationContext);
     const [activeFilter, setActiveFilter] = useState('all');
@@ -121,33 +141,37 @@ export default function PublicIndex({ projects = [] }) {
                             <p className="block"><TranslatedText locale={locale}>{getStatic('empty_state')}</TranslatedText></p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 md:gap-x-12 md:gap-y-20">
                             {filteredProjects.map((project, idx) => (
                                 <Link 
                                     key={project.id}
                                     href={`/projects/${project.slug}`}
                                     ref={addToRefs}
-                                    className={`cinematic-card flex flex-col group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
+                                    className={`flex flex-col group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
                                 >
-                                    <div className="relative aspect-[16/10] overflow-hidden bg-[#080808] rounded-t-3xl">
+                                    {/* Thumbnail with Cinematic loading and subtle 2px border radius */}
+                                    <div className="relative aspect-[16/10] overflow-hidden bg-white/5 rounded-[2px]">
                                         <div className="absolute top-4 left-4 z-10 cinematic-tag bg-black/40 backdrop-blur-md text-white border-transparent">
                                             {getCategory(project.id)}
                                         </div>
-                                        <img 
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100" 
+                                        <CinematicImage 
+                                            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-105" 
                                             alt={t(project, 'title')} 
                                             src={project.thumbnail}
+                                            aspectClass="h-full w-full rounded-[2px]"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] to-transparent opacity-60 z-10"></div>
                                     </div>
-                                    <div className="p-8 flex-1 flex flex-col gap-4 bg-[#050505] rounded-b-3xl">
-                                        <h3 className="font-sans text-2xl font-light text-white tracking-tight line-clamp-1">
+                                    
+                                    {/* Content styled with clean typography and whitespace instead of box container */}
+                                    <div className="pt-6 flex-1 flex flex-col gap-4 bg-transparent">
+                                        <h3 className="font-sans text-2xl font-light text-white tracking-tight line-clamp-1 group-hover:text-white/80 transition-colors">
                                             <TranslatedText locale={locale}>{t(project, 'title')}</TranslatedText>
                                         </h3>
-                                        <p className="font-sans text-sm text-white/50 leading-relaxed line-clamp-2 mt-2 flex-grow block">
+                                        <p className="font-sans text-sm text-white/50 leading-relaxed line-clamp-2 flex-grow block">
                                             <TranslatedText locale={locale}>{t(project, 'desc')}</TranslatedText>
                                         </p>
-                                        <div className="mt-6 pt-4 border-t border-white/10 flex justify-between items-center font-sans text-xs tracking-widest uppercase text-white/40">
+                                        <div className="mt-4 pt-4 border-t border-white/5 flex justify-between items-center font-sans text-xs tracking-widest uppercase text-white/40">
                                             <span>{project.location}</span>
                                             <span className="flex items-center gap-2 group-hover:text-white transition-colors">
                                                 <TranslatedText locale={locale}>{getStatic('read_more')}</TranslatedText> <span className="material-symbols-outlined text-[14px]">arrow_forward</span>

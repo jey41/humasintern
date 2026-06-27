@@ -31,10 +31,12 @@ export default function TranslatedText({ children, locale, className = '', as: C
         }
     };
 
+    const MotionComponent = Component === 'span' ? motion.span : motion.div;
+
     return (
         <Component className={`inline-block relative whitespace-pre-wrap ${className}`}>
             <AnimatePresence mode="wait">
-                <motion.div
+                <MotionComponent
                     key={locale}
                     variants={variants}
                     initial="initial"
@@ -42,10 +44,8 @@ export default function TranslatedText({ children, locale, className = '', as: C
                     exit="exit"
                     transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
                     className="inline-block w-full"
-                    dangerouslySetInnerHTML={props.dangerouslySetInnerHTML}
-                >
-                    {!props.dangerouslySetInnerHTML && children}
-                </motion.div>
+                    {...(props.dangerouslySetInnerHTML ? { dangerouslySetInnerHTML: props.dangerouslySetInnerHTML } : { children })}
+                />
             </AnimatePresence>
         </Component>
     );

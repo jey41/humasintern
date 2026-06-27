@@ -1,7 +1,27 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Head } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
+
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
 
 export default function About({ chapters = [] }) {
     const { locale, t } = useContext(TranslationContext);
@@ -117,7 +137,7 @@ export default function About({ chapters = [] }) {
                 </div>
             </section>
 
-            {/* Who We Are Section */}
+            {/* Who We Are Section (0px border radius, flat integration) */}
             <section className="w-full cinematic-section bg-[#050505]">
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:col-span-5 order-2 md:order-1 relative z-10 space-y-8">
@@ -132,19 +152,20 @@ export default function About({ chapters = [] }) {
                         </p>
                     </div>
                     <div className="md:col-span-7 order-1 md:order-2">
-                        <div className="aspect-[4/3] w-full rounded-3xl overflow-hidden relative group">
-                            <img 
-                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                        <div className="aspect-[4/3] w-full overflow-hidden relative group rounded-none">
+                            <CinematicImage 
+                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]" 
                                 alt="Collaborating students" 
                                 src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=2968&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-none"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Bento Grid */}
+            {/* Bento Grid (subtle 2px corners, whitespace driven) */}
             <section className="w-full cinematic-section bg-[#080808] border-y border-white/5">
                 <div ref={addToRefs} className="opacity-0 translate-y-12 transition-all duration-1000 ease-out mb-16 text-center">
                     <h2 className="editorial-headline text-white mb-4"><TranslatedText locale={locale}>{getStatic('what_title')}</TranslatedText></h2>
@@ -153,48 +174,51 @@ export default function About({ chapters = [] }) {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {/* Card 1 */}
-                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-100">
-                        <div className="absolute inset-0 z-0">
-                            <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
+                    <div ref={addToRefs} className="relative h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-100 rounded-[2px] bg-white/[0.01]">
+                        <div className="absolute inset-0 z-0 rounded-[2px] overflow-hidden">
+                            <CinematicImage 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-[1.02] transition-all duration-700" 
                                 alt="Digital Strategy" 
                                 src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2830&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-[2px]"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent z-10"></div>
                         </div>
-                        <div className="relative z-10">
+                        <div className="relative z-20">
                             <div className="text-white/30 font-sans tracking-widest text-sm mb-4">01</div>
                             <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento1_title')}</TranslatedText></h3>
                             <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento1_desc')}</TranslatedText></p>
                         </div>
                     </div>
                     {/* Card 2 */}
-                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-200">
-                        <div className="absolute inset-0 z-0">
-                            <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
+                    <div ref={addToRefs} className="relative h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-200 rounded-[2px] bg-white/[0.01]">
+                        <div className="absolute inset-0 z-0 rounded-[2px] overflow-hidden">
+                            <CinematicImage 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-[1.02] transition-all duration-700" 
                                 alt="Media Production" 
                                 src="https://images.unsplash.com/photo-1601506521937-0121a7fc2a6b?q=80&w=2942&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-[2px]"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent z-10"></div>
                         </div>
-                        <div className="relative z-10">
+                        <div className="relative z-20">
                             <div className="text-white/30 font-sans tracking-widest text-sm mb-4">02</div>
                             <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento2_title')}</TranslatedText></h3>
                             <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento2_desc')}</TranslatedText></p>
                         </div>
                     </div>
                     {/* Card 3 */}
-                    <div ref={addToRefs} className="cinematic-card h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-300">
-                        <div className="absolute inset-0 z-0">
-                            <img 
-                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-105 transition-all duration-700" 
+                    <div ref={addToRefs} className="relative h-96 flex flex-col justify-end p-8 group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-300 rounded-[2px] bg-white/[0.01]">
+                        <div className="absolute inset-0 z-0 rounded-[2px] overflow-hidden">
+                            <CinematicImage 
+                                className="w-full h-full object-cover opacity-40 group-hover:opacity-60 group-hover:scale-[1.02] transition-all duration-700" 
                                 alt="Crisis Communication" 
                                 src="https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2874&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-[2px]"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent"></div>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/60 to-transparent z-10"></div>
                         </div>
-                        <div className="relative z-10">
+                        <div className="relative z-20">
                             <div className="text-white/30 font-sans tracking-widest text-sm mb-4">03</div>
                             <h3 className="font-sans text-2xl text-white mb-3 font-light tracking-tight"><TranslatedText locale={locale}>{getStatic('bento3_title')}</TranslatedText></h3>
                             <p className="font-sans text-sm text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{getStatic('bento3_desc')}</TranslatedText></p>
@@ -203,9 +227,9 @@ export default function About({ chapters = [] }) {
                 </div>
             </section>
 
-            {/* Our Culture Section */}
+            {/* Our Culture Section (flat, transparent integration) */}
             <section className="w-full cinematic-section bg-[#050505]">
-                <div ref={addToRefs} className="cinematic-card p-12 md:p-20 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                <div ref={addToRefs} className="bg-transparent py-12 md:py-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
                         <div className="space-y-8">
                             <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Nilai Inti' : 'Core Values'}</TranslatedText></span>
@@ -222,19 +246,20 @@ export default function About({ chapters = [] }) {
                                 <span className="cinematic-tag"><TranslatedText locale={locale}>{getStatic('culture_tag3')}</TranslatedText></span>
                             </div>
                         </div>
-                        <div className="relative aspect-[3/4] rounded-2xl overflow-hidden group">
-                            <img 
-                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                        <div className="relative aspect-[3/4] overflow-hidden group rounded-none bg-white/[0.01]">
+                            <CinematicImage 
+                                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]" 
                                 alt="Culture details" 
                                 src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=2940&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-none"
                             />
-                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700"></div>
+                            <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors duration-700 z-10"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Chapters Database Integration */}
+            {/* Chapters Database Integration (flat design, subtle 2px corners) */}
             {chapters.length > 0 && (
                 <section className="w-full cinematic-section bg-[#080808] border-t border-white/5">
                     <div ref={addToRefs} className="space-y-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
@@ -246,25 +271,26 @@ export default function About({ chapters = [] }) {
                             {chapters.map((chapter, idx) => (
                                 <div 
                                     key={chapter.id}
-                                    className={`cinematic-card flex flex-col opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
+                                    className={`flex flex-col bg-transparent opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
                                     ref={addToRefs}
                                 >
-                                    <div className="h-64 overflow-hidden relative">
-                                        <img 
-                                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
+                                    <div className="h-64 overflow-hidden relative bg-white/[0.01] rounded-[2px]">
+                                        <CinematicImage 
+                                            className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.02]" 
                                             alt={t(chapter, 'name')} 
                                             src={chapter.photo || "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop"}
+                                            aspectClass="h-full w-full rounded-[2px]"
                                         />
                                         <div className="absolute top-4 right-4 z-10 cinematic-tag bg-black/40 backdrop-blur-md text-white border-transparent">
                                             {chapter.location}
                                         </div>
                                     </div>
-                                    <div className="p-8 flex flex-col flex-grow gap-4">
+                                    <div className="pt-6 flex flex-col flex-grow gap-4 bg-transparent">
                                         <h3 className="font-sans text-2xl font-light text-white tracking-tight"><TranslatedText locale={locale}>{t(chapter, 'name')}</TranslatedText></h3>
                                         <p className="font-sans text-sm text-white/50 leading-relaxed line-clamp-3 block">
                                             <TranslatedText locale={locale}>{t(chapter, 'desc')}</TranslatedText>
                                         </p>
-                                        <div className="mt-auto pt-6 border-t border-white/10 flex justify-between items-center text-xs font-sans tracking-widest uppercase text-white/40">
+                                        <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center text-xs font-sans tracking-widest uppercase text-white/40">
                                             <span><TranslatedText locale={locale}>{locale === 'id' ? 'Divisi:' : 'Division:'}</TranslatedText> {chapter.division}</span>
                                         </div>
                                     </div>

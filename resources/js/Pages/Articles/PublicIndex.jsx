@@ -3,6 +3,26 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
+
 export default function PublicIndex({ articles = [] }) {
     const { locale, t } = useContext(TranslationContext);
     const [searchTerm, setSearchTerm] = useState('');
@@ -68,14 +88,12 @@ export default function PublicIndex({ articles = [] }) {
     const getReadTime = (article) => {
         const content = t(article, 'content');
         if (!content) return 5;
-        // strip html tags
         const text = content.replace(/<[^>]*>?/gm, '');
         const wordCount = text.trim().split(/\s+/).length;
         return Math.max(1, Math.ceil(wordCount / 200));
     };
 
     const getArticleCategory = (article) => {
-        // Derive category from title/content keywords if possible, else fallback
         const title = t(article, 'title').toLowerCase();
         if (title.includes('prestasi') || title.includes('achievement')) return 'achievements';
         if (title.includes('proyek') || title.includes('project')) return 'projects';
@@ -109,7 +127,7 @@ export default function PublicIndex({ articles = [] }) {
                 <div className="max-w-[1280px] mx-auto relative z-10 animate-fade-in-up">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-12 mb-16">
                         <div className="max-w-2xl">
-                            <h1 className="text-white text-5xl md:text-7xl font-serif tracking-tight mb-6">
+                            <h1 className="text-white text-5xl md:text-7xl font-serif tracking-tight mb-6 animate-fade-in-up">
                                 <TranslatedText locale={locale}>{getStatic('title')}</TranslatedText>
                             </h1>
                             <p className="font-sans text-lg md:text-xl text-white/60 leading-relaxed max-w-lg">
@@ -156,41 +174,42 @@ export default function PublicIndex({ articles = [] }) {
                     </div>
                 ) : (
                     <>
-                        {/* Featured Story */}
+                        {/* Featured Story (0px border radius, flat integration) */}
                         {featuredArticle && (
                             <section className="px-margin-mobile md:px-margin-desktop pb-24">
-                                <div className="max-w-[1280px] mx-auto">
+                                <div className="max-w-[1280px] mx-auto border-b border-white/5 pb-20">
                                     <Link 
                                         href={`/articles/${featuredArticle.slug}`} 
-                                        className="group block relative rounded-3xl overflow-hidden bg-[#0a0a0a] animate-fade-in-up"
+                                        className="group block relative bg-transparent animate-fade-in-up"
                                     >
-                                        <div className="flex flex-col lg:flex-row">
-                                            {/* Featured Image (60-70%) */}
-                                            <div className="w-full lg:w-[65%] relative aspect-[4/3] lg:aspect-auto lg:h-[600px] overflow-hidden">
-                                                <img 
+                                        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
+                                            {/* Featured Image (65%) */}
+                                            <div className="w-full lg:w-[65%] relative aspect-[4/3] lg:aspect-auto lg:h-[550px] overflow-hidden rounded-none bg-white/[0.01]">
+                                                <CinematicImage 
                                                     src={featuredArticle.thumbnail} 
                                                     alt={t(featuredArticle, 'title')} 
-                                                    className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-90 group-hover:opacity-100"
+                                                    className="w-full h-full object-cover transform group-hover:scale-[1.02] group-hover:brightness-105 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                                                    aspectClass="h-full w-full rounded-none"
                                                 />
                                             </div>
                                             
-                                            {/* Featured Content */}
-                                            <div className="w-full lg:w-[35%] p-10 md:p-16 flex flex-col justify-center bg-[#0a0a0a] relative z-10 border-l border-white/5">
+                                            {/* Featured Content (whitespace driven, flat layout) */}
+                                            <div className="w-full lg:w-[35%] flex flex-col justify-center bg-transparent relative z-10 p-0">
                                                 <div className="mb-6">
                                                     <span className="inline-block px-3 py-1 rounded-full border border-white/10 text-[10px] uppercase tracking-widest text-white/60 mb-6">
                                                         <TranslatedText locale={locale}>{getStatic(`category_${getArticleCategory(featuredArticle)}`)}</TranslatedText>
                                                     </span>
                                                 </div>
                                                 
-                                                <h2 className="text-4xl md:text-[2.75rem] leading-[1.1] font-serif text-white mb-6 group-hover:text-white/90 transition-colors">
+                                                <h2 className="text-4xl md:text-[2.5rem] leading-[1.15] font-serif text-white mb-6 group-hover:text-white/80 transition-colors tracking-tight">
                                                     <TranslatedText locale={locale}>{t(featuredArticle, 'title')}</TranslatedText>
                                                 </h2>
                                                 
-                                                <p className="font-sans text-base text-white/50 leading-relaxed mb-10 line-clamp-3">
+                                                <p className="font-sans text-base text-white/50 leading-relaxed mb-8 line-clamp-3">
                                                     <TranslatedText locale={locale}>{t(featuredArticle, 'desc')}</TranslatedText>
                                                 </p>
                                                 
-                                                <div className="flex flex-col gap-2 font-sans text-xs uppercase tracking-widest text-white/40 mt-auto">
+                                                <div className="flex flex-col gap-2 font-sans text-xs uppercase tracking-widest text-white/40 mt-auto pt-6 border-t border-white/5">
                                                     <span className="text-white/80">{featuredArticle.author}</span>
                                                     <div className="flex items-center gap-3">
                                                         <span>{formatDate(featuredArticle.created_at)}</span>
@@ -205,11 +224,11 @@ export default function PublicIndex({ articles = [] }) {
                             </section>
                         )}
 
-                        {/* Latest Articles Grid */}
+                        {/* Latest Articles Grid (Subtle 2px corners, whitespace driven) */}
                         {gridArticles.length > 0 && (
                             <section className="px-margin-mobile md:px-margin-desktop py-12 pb-32">
                                 <div className="max-w-[1280px] mx-auto">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-20">
                                         {gridArticles.map((article, idx) => (
                                             <Link 
                                                 href={`/articles/${article.slug}`} 
@@ -217,11 +236,13 @@ export default function PublicIndex({ articles = [] }) {
                                                 ref={addToRefs}
                                                 className={`group flex flex-col opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
                                             >
-                                                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-[#0a0a0a]">
-                                                    <img 
-                                                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-80 group-hover:opacity-100" 
+                                                {/* Thumbnail with Cinematic loading and subtle 2px border radius */}
+                                                <div className="relative aspect-[4/3] overflow-hidden mb-6 bg-white/[0.01] rounded-[2px]">
+                                                    <CinematicImage 
+                                                        className="w-full h-full object-cover transform group-hover:scale-[1.02] group-hover:brightness-105 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]" 
                                                         alt={t(article, 'title')} 
                                                         src={article.thumbnail}
+                                                        aspectClass="h-full w-full rounded-[2px]"
                                                     />
                                                 </div>
                                                 
@@ -235,7 +256,7 @@ export default function PublicIndex({ articles = [] }) {
                                                         </span>
                                                     </div>
                                                     
-                                                    <h3 className="text-2xl font-serif text-white leading-tight mb-4 group-hover:underline decoration-white/30 underline-offset-4 transition-all">
+                                                    <h3 className="text-2xl font-serif text-white leading-tight mb-4 group-hover:text-white/80 transition-colors">
                                                         <TranslatedText locale={locale}>{t(article, 'title')}</TranslatedText>
                                                     </h3>
                                                     

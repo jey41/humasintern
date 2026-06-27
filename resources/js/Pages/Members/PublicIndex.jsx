@@ -3,6 +3,26 @@ import { Head } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
+
 export default function PublicIndex({ members = [], batches = [] }) {
     const { locale } = useContext(TranslationContext);
     
@@ -129,11 +149,12 @@ export default function PublicIndex({ members = [], batches = [] }) {
                                         </div>
                                     </div>
                                     <div className="md:col-span-7">
-                                        <div className="aspect-[16/10] w-full rounded-2xl overflow-hidden relative">
-                                            <img 
-                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 hover:scale-105" 
+                                        <div className="aspect-[16/10] w-full overflow-hidden relative rounded-none bg-white/[0.01]">
+                                            <CinematicImage 
+                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 hover:scale-[1.02]" 
                                                 src={activeBatch.photo} 
                                                 alt={activeBatch.name_id} 
+                                                aspectClass="h-full w-full rounded-none"
                                             />
                                         </div>
                                     </div>
@@ -156,32 +177,36 @@ export default function PublicIndex({ members = [], batches = [] }) {
                                                 <div
                                                     key={member.id}
                                                     ref={addToRefs}
-                                                    className={`cinematic-card flex flex-col group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 4) * 100}`}
+                                                    className={`flex flex-col group opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 4) * 100}`}
                                                 >
-                                                    <div className="aspect-[4/5] w-full relative overflow-hidden bg-[#080808]">
+                                                    {/* Member profile image (subtle 2px corners, whitespace driven) */}
+                                                    <div className="aspect-[4/5] w-full relative overflow-hidden bg-[#080808] rounded-[2px]">
                                                         {member.photo ? (
-                                                            <img
-                                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100"
+                                                            <CinematicImage
+                                                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02] group-hover:brightness-105 opacity-90 group-hover:opacity-100"
                                                                 alt={member.name}
                                                                 src={member.photo}
+                                                                aspectClass="h-full w-full rounded-[2px]"
                                                             />
                                                         ) : (
                                                             <div className="absolute inset-0 flex items-center justify-center opacity-10">
                                                                 <span className="material-symbols-outlined text-6xl">person</span>
                                                             </div>
                                                         )}
-                                                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/40 to-transparent"></div>
-                                                        <div className="absolute top-4 left-4 z-10">
+                                                        <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/40 to-transparent z-10"></div>
+                                                        <div className="absolute top-4 left-4 z-20">
                                                             <span className="cinematic-tag">
                                                                 {member.division}
                                                             </span>
                                                         </div>
                                                     </div>
-                                                    <div className="p-6 flex-1 flex flex-col bg-[#050505] relative z-20 -mt-6 rounded-t-2xl">
-                                                        <h3 className="font-sans text-xl text-white font-light tracking-tight mb-2">{member.name}</h3>
+                                                    
+                                                    {/* Details layout sits flat below the image without box containers */}
+                                                    <div className="pt-6 flex-1 flex flex-col bg-transparent relative z-20">
+                                                        <h3 className="font-sans text-xl text-white font-light tracking-tight mb-2 group-hover:text-white/80 transition-colors">{member.name}</h3>
                                                         <p className="font-sans text-sm text-white/50">{member.role}</p>
 
-                                                        <div className="mt-6 pt-4 border-t border-white/10 flex items-center gap-4 text-white/40">
+                                                        <div className="mt-6 pt-4 border-t border-white/5 flex items-center gap-4 text-white/40">
                                                             {member.email && (
                                                                 <a href={`mailto:${member.email}`} className="hover:text-white transition-colors" title={member.email}>
                                                                     <span className="material-symbols-outlined text-xl">mail</span>

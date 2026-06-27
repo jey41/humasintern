@@ -1,7 +1,27 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
+
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
 
 export default function PublicShow({ article, recentArticles = [] }) {
     const { locale, t } = useContext(TranslationContext);
@@ -75,17 +95,18 @@ export default function PublicShow({ article, recentArticles = [] }) {
             <Head title={`${t(article, 'title')} - Humas Intern Unmul`} />
 
             <div className="bg-[#050505] min-h-screen pb-32">
-                {/* Hero Image Section */}
-                <div className="relative w-full h-[60vh] md:h-[75vh] bg-[#0a0a0a] overflow-hidden">
-                    <img 
+                {/* Hero Image Section (0px border radius) */}
+                <div className="relative w-full h-[60vh] md:h-[75vh] bg-[#0a0a0a] overflow-hidden rounded-none">
+                    <CinematicImage 
                         src={article.thumbnail} 
                         alt={t(article, 'title')} 
                         className="w-full h-full object-cover animate-image-reveal"
+                        aspectClass="h-full w-full rounded-none"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#050505]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#050505] z-10"></div>
                     
                     {/* Back Button Floating on Image */}
-                    <div className="absolute top-32 left-margin-mobile md:left-margin-desktop z-10">
+                    <div className="absolute top-32 left-margin-mobile md:left-margin-desktop z-20">
                         <Link 
                             href="/articles" 
                             className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-xs font-sans uppercase tracking-widest text-white/80 hover:text-white hover:bg-black/60 transition-all"
@@ -96,18 +117,18 @@ export default function PublicShow({ article, recentArticles = [] }) {
                     </div>
                 </div>
 
-                {/* Article Header (Metadata & Title) */}
-                <header className="relative -mt-32 z-10 max-w-4xl mx-auto px-6 md:px-12 animate-fade-in-up">
-                    <div className="bg-[#0a0a0a] rounded-3xl p-8 md:p-16 shadow-2xl border border-white/5 text-center">
-                        <span className="inline-block px-4 py-1.5 rounded-full border border-white/10 text-xs font-sans uppercase tracking-widest text-white/60 mb-8">
+                {/* Article Header (Flat, transparent, whitespace-focused - no box card container) */}
+                <header className="relative -mt-32 z-20 max-w-4xl mx-auto px-6 md:px-12 animate-fade-in-up">
+                    <div className="bg-transparent p-8 md:p-12 text-center">
+                        <span className="inline-block px-4 py-1.5 rounded-[2px] border border-white/10 text-xs font-sans uppercase tracking-widest text-white/60 mb-8 bg-white/5 backdrop-blur-sm">
                             <TranslatedText locale={locale}>{category[locale]}</TranslatedText>
                         </span>
                         
-                        <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-white mb-8 leading-[1.15] tracking-tight">
+                        <h1 className="text-4xl md:text-5xl lg:text-[3.5rem] lg:leading-[1.1] font-serif text-white mb-8 tracking-tight font-normal">
                             <TranslatedText locale={locale}>{t(article, 'title')}</TranslatedText>
                         </h1>
                         
-                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-sans text-xs md:text-sm text-white/50 uppercase tracking-widest">
+                        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 font-sans text-xs md:text-sm text-white/50 uppercase tracking-widest pt-4 border-t border-white/5 max-w-xl mx-auto">
                             <div className="flex items-center gap-2">
                                 <span className="text-white/40"><TranslatedText locale={locale}>{getStatic('author_label')}</TranslatedText></span>
                                 <span className="text-white/90 font-medium">{article.author}</span>
@@ -133,18 +154,18 @@ export default function PublicShow({ article, recentArticles = [] }) {
                                       prose-p:mb-8 prose-p:leading-[1.8]
                                       prose-a:text-white prose-a:underline-offset-4 prose-a:decoration-white/30 hover:prose-a:decoration-white transition-colors
                                       prose-blockquote:border-l-2 prose-blockquote:border-white/20 prose-blockquote:pl-8 prose-blockquote:text-white/90 prose-blockquote:font-serif prose-blockquote:text-2xl prose-blockquote:italic prose-blockquote:leading-snug
-                                      prose-img:rounded-2xl prose-img:w-full prose-img:my-16
+                                      prose-img:rounded-none prose-img:w-full prose-img:my-16
                                       animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         
-                        <div className="text-2xl md:text-3xl font-serif text-white/90 leading-snug mb-16 pb-16 border-b border-white/10">
+                        <div className="text-2xl md:text-3xl font-serif text-white/95 leading-snug mb-16 pb-16 border-b border-white/5 font-light">
                             <TranslatedText locale={locale}>{t(article, 'desc')}</TranslatedText>
                         </div>
                         
-                        <TranslatedText locale={locale} as="div" className="article-content" dangerouslySetInnerHTML={{ __html: t(article, 'content') }} />
+                        <div className="article-content" dangerouslySetInnerHTML={{ __html: t(article, 'content') }} />
                     </article>
                 </div>
 
-                {/* Related Articles Section */}
+                {/* Related Articles Section (subtle 2px corners, whitespace driven) */}
                 {recentArticles.length > 0 && (
                     <div className="border-t border-white/5 pt-24 mt-8">
                         <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop">
@@ -159,11 +180,12 @@ export default function PublicShow({ article, recentArticles = [] }) {
                                         ref={addToRefs}
                                         className={`group flex flex-col opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${idx * 100}`}
                                     >
-                                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6 bg-[#0a0a0a]">
-                                            <img 
-                                                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)] opacity-80 group-hover:opacity-100" 
+                                        <div className="relative aspect-[4/3] rounded-[2px] overflow-hidden mb-6 bg-white/[0.01]">
+                                            <CinematicImage 
+                                                className="w-full h-full object-cover transform group-hover:scale-[1.02] group-hover:brightness-105 transition-all duration-1000 ease-[cubic-bezier(0.16,1,0.3,1)]" 
                                                 alt={t(a, 'title')} 
                                                 src={a.thumbnail}
+                                                aspectClass="h-full w-full rounded-[2px]"
                                             />
                                         </div>
                                         <div className="flex flex-col flex-1">
@@ -176,7 +198,7 @@ export default function PublicShow({ article, recentArticles = [] }) {
                                                 </span>
                                             </div>
                                             
-                                            <h3 className="text-2xl font-serif text-white leading-tight mb-4 group-hover:underline decoration-white/30 underline-offset-4 transition-all">
+                                            <h3 className="text-2xl font-serif text-white leading-tight mb-4 group-hover:text-white/80 transition-colors">
                                                 <TranslatedText locale={locale}>{t(a, 'title')}</TranslatedText>
                                             </h3>
                                             

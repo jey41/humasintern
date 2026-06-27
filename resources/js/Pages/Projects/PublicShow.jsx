@@ -1,7 +1,27 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
+
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
 
 export default function PublicShow({ project }) {
     const { locale, t } = useContext(TranslationContext);
@@ -80,12 +100,13 @@ export default function PublicShow({ project }) {
 
                 {/* Main Content */}
                 <div className="max-w-[1000px] mx-auto px-margin-mobile md:px-margin-desktop relative z-10 py-16">
-                    {/* Featured Image */}
-                    <div className="w-full aspect-video rounded-3xl overflow-hidden bg-[#080808] mb-16 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                        <img 
+                    {/* Featured Image (0px border radius, cinematic banner) */}
+                    <div className="w-full aspect-video overflow-hidden bg-[#080808] mb-16 animate-fade-in-up rounded-none" style={{ animationDelay: '0.2s' }}>
+                        <CinematicImage 
                             src={project.thumbnail} 
                             alt={t(project, 'title')} 
                             className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity duration-700"
+                            aspectClass="h-full w-full rounded-none"
                         />
                     </div>
                     
@@ -93,12 +114,12 @@ export default function PublicShow({ project }) {
                     <article className="prose prose-invert prose-lg max-w-3xl mx-auto font-sans text-white/70 leading-relaxed 
                                       prose-headings:font-sans prose-headings:font-light prose-headings:text-white 
                                       prose-a:text-white prose-a:underline-offset-4 prose-a:decoration-white/30 hover:prose-a:decoration-white
-                                      prose-img:rounded-2xl
+                                      prose-img:rounded-[2px]
                                       animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                         <div className="border-l border-white/20 pl-6 mb-12 text-2xl font-light text-white/90 leading-snug">
                             <TranslatedText locale={locale}>{t(project, 'desc')}</TranslatedText>
                         </div>
-                        <TranslatedText locale={locale} as="div" className="article-content" dangerouslySetInnerHTML={{ __html: t(project, 'content') }} />
+                        <div className="article-content" dangerouslySetInnerHTML={{ __html: t(project, 'content') }} />
                     </article>
                 </div>
             </div>

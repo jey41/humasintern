@@ -3,6 +3,26 @@ import { Head, Link } from '@inertiajs/react';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
+// Cinematic Progressive Image Loader
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-35 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
+
 const CountUp = ({ end, duration = 2, suffix = '' }) => {
     const [count, setCount] = useState(0);
     const ref = useRef(null);
@@ -99,22 +119,23 @@ export default function Welcome({ recentArticles = [] }) {
             {/* SECTION 1: HERO (100vh) */}
             <section className="relative h-screen flex items-center justify-center overflow-hidden">
                 <div className="absolute inset-0 z-0">
-                    <img 
-                        className="w-full h-full object-cover animate-image-zoom" 
+                    <CinematicImage 
+                        className="w-full h-full object-cover" 
                         alt="Hero Background" 
                         src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2940&auto=format&fit=crop"
+                        aspectClass="h-full w-full rounded-none"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#050505]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-[#050505] z-10"></div>
                 </div>
                 
-                <div className="relative z-10 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop text-center flex flex-col items-center mt-20">
+                <div className="relative z-20 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop text-center flex flex-col items-center mt-20">
                     <h1 className="editorial-display text-white max-w-5xl animate-fade-in-up">
                         <TranslatedText locale={locale}>{getStatic('hero_title')}</TranslatedText>
                     </h1>
                 </div>
             </section>
 
-            {/* SECTION 2: EDITORIAL SPLIT */}
+            {/* SECTION 2: EDITORIAL SPLIT (0px border radius) */}
             <section className="cinematic-section bg-[#050505]">
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-24 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:col-span-5 space-y-8">
@@ -133,19 +154,20 @@ export default function Welcome({ recentArticles = [] }) {
                         </Link>
                     </div>
                     <div className="md:col-span-7">
-                        <div className="relative aspect-[4/5] md:aspect-[3/4] w-full rounded-2xl overflow-hidden group">
-                            <img 
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                        <div className="relative aspect-[4/5] md:aspect-[3/4] w-full overflow-hidden group rounded-none">
+                            <CinematicImage 
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-[1.02]" 
                                 alt="Editorial Split" 
                                 src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2940&auto=format&fit=crop"
+                                aspectClass="h-full w-full rounded-none"
                             />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* SECTION 3: FULL WIDTH VISUAL BREAK */}
-            <section ref={addToRefs} className="relative h-[80vh] w-full opacity-0 translate-y-12 transition-all duration-1000 ease-out my-cinematic-spacing">
+            {/* SECTION 3: FULL WIDTH VISUAL BREAK (0px border radius) */}
+            <section ref={addToRefs} className="relative h-[80vh] w-full opacity-0 translate-y-12 transition-all duration-1000 ease-out my-cinematic-spacing overflow-hidden">
                 <img 
                     className="w-full h-full object-cover fixed-attachment" 
                     alt="Visual Break" 
@@ -159,13 +181,18 @@ export default function Welcome({ recentArticles = [] }) {
                 </div>
             </section>
 
-            {/* SECTION 4: ALTERNATING STORY GRID */}
+            {/* SECTION 4: ALTERNATING STORY GRID (0px border radius) */}
             <section className="cinematic-section bg-[#050505]">
                 <div className="space-y-40">
                     {/* Row 1: Image Left, Content Right */}
                     <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-32 items-center opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-                        <div className="aspect-square rounded-3xl overflow-hidden">
-                            <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop" alt="Strategy" />
+                        <div className="aspect-square overflow-hidden rounded-none">
+                            <CinematicImage 
+                                className="w-full h-full object-cover" 
+                                src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=2940&auto=format&fit=crop" 
+                                alt="Strategy" 
+                                aspectClass="h-full w-full rounded-none"
+                            />
                         </div>
                         <div className="space-y-6">
                             <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Strategi Digital' : 'Digital Strategy'}</TranslatedText></span>
@@ -193,8 +220,13 @@ export default function Welcome({ recentArticles = [] }) {
                                     : 'Through the camera lens, we freeze historic moments, turning routine events into stunning cinematic documentation.'}</TranslatedText>
                             </p>
                         </div>
-                        <div className="order-1 md:order-2 aspect-[4/3] rounded-3xl overflow-hidden">
-                            <img className="w-full h-full object-cover" src="https://images.unsplash.com/photo-1600508774634-4e11d34730e2?q=80&w=2940&auto=format&fit=crop" alt="Production" />
+                        <div className="order-1 md:order-2 aspect-[4/3] overflow-hidden rounded-none">
+                            <CinematicImage 
+                                className="w-full h-full object-cover" 
+                                src="https://images.unsplash.com/photo-1600508774634-4e11d34730e2?q=80&w=2940&auto=format&fit=crop" 
+                                alt="Production" 
+                                aspectClass="h-full w-full rounded-none"
+                            />
                         </div>
                     </div>
                 </div>
@@ -218,39 +250,60 @@ export default function Welcome({ recentArticles = [] }) {
                 </div>
             </section>
 
-            {/* SECTION 6: CINEMATIC GALLERY */}
+            {/* SECTION 6: CINEMATIC GALLERY (subtle 2px corners for masonry-grid feel) */}
             <section className="cinematic-section">
                 <div ref={addToRefs} className="mb-16 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <h2 className="editorial-headline text-white text-center">Visual Diary</h2>
                 </div>
                 <div ref={addToRefs} className="grid grid-cols-1 md:grid-cols-12 gap-6 opacity-0 translate-y-12 transition-all duration-1000 ease-out">
-                    <div className="md:col-span-8 aspect-[16/9] rounded-2xl overflow-hidden">
-                        <img className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2940&auto=format&fit=crop" alt="Gallery 1" />
+                    <div className="md:col-span-8 aspect-[16/9] overflow-hidden rounded-[2px] group">
+                        <CinematicImage 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+                            src="https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?q=80&w=2940&auto=format&fit=crop" 
+                            alt="Gallery 1" 
+                            aspectClass="h-full w-full rounded-[2px]"
+                        />
                     </div>
-                    <div className="md:col-span-4 aspect-[4/5] rounded-2xl overflow-hidden">
-                        <img className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?q=80&w=2940&auto=format&fit=crop" alt="Gallery 2" />
+                    <div className="md:col-span-4 aspect-[4/5] overflow-hidden rounded-[2px] group">
+                        <CinematicImage 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+                            src="https://images.unsplash.com/photo-1492538368677-f6e0afe31dcc?q=80&w=2940&auto=format&fit=crop" 
+                            alt="Gallery 2" 
+                            aspectClass="h-full w-full rounded-[2px]"
+                        />
                     </div>
-                    <div className="md:col-span-5 aspect-square rounded-2xl overflow-hidden">
-                        <img className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1531496730074-83b638c0a7ac?q=80&w=2874&auto=format&fit=crop" alt="Gallery 3" />
+                    <div className="md:col-span-5 aspect-square overflow-hidden rounded-[2px] group">
+                        <CinematicImage 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+                            src="https://images.unsplash.com/photo-1531496730074-83b638c0a7ac?q=80&w=2874&auto=format&fit=crop" 
+                            alt="Gallery 3" 
+                            aspectClass="h-full w-full rounded-[2px]"
+                        />
                     </div>
-                    <div className="md:col-span-7 aspect-[21/9] rounded-2xl overflow-hidden">
-                        <img className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop" alt="Gallery 4" />
+                    <div className="md:col-span-7 aspect-[21/9] overflow-hidden rounded-[2px] group">
+                        <CinematicImage 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" 
+                            src="https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2832&auto=format&fit=crop" 
+                            alt="Gallery 4" 
+                            aspectClass="h-full w-full rounded-[2px]"
+                        />
                     </div>
                 </div>
             </section>
 
-            {/* SECTION 7: FEATURE SPOTLIGHT */}
-            <section className="relative h-screen w-full flex items-center bg-[#050505]">
+            {/* SECTION 7: FEATURE SPOTLIGHT (0px border radius) */}
+            <section className="relative h-screen w-full flex items-center bg-[#050505] overflow-hidden">
                 <div className="absolute inset-0 z-0 md:w-[70%]">
-                    <img 
+                    <CinematicImage 
                         className="w-full h-full object-cover" 
                         alt="Spotlight" 
                         src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?q=80&w=2940&auto=format&fit=crop"
+                        aspectClass="h-full w-full rounded-none"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/80 to-[#050505]"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-black/80 to-[#050505] z-10"></div>
                 </div>
                 
-                <div ref={addToRefs} className="relative z-10 max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop w-full flex justify-end opacity-0 translate-y-12 transition-all duration-1000 ease-out">
+                <div ref={addToRefs} className="relative z-20 max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop w-full flex justify-end opacity-0 translate-y-12 transition-all duration-1000 ease-out">
                     <div className="md:w-[40%] space-y-8 pl-8 md:pl-0">
                         <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Fokus Proyek' : 'Project Focus'}</TranslatedText></span>
                         <h2 className="editorial-headline text-white">

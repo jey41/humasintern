@@ -1,151 +1,300 @@
-import React, { useContext, useState, useEffect, useRef } from 'react';
+import React, { useContext, useState, useEffect, useCallback } from 'react';
 import { Head } from '@inertiajs/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import PublicLayout, { TranslationContext } from '@/Layouts/PublicLayout';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
 
+// Cinematic Progressive Image Loader to prevent layout shifts and add elegant fade/blur transitions
+function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
+    const [loaded, setLoaded] = useState(false);
+
+    return (
+        <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
+            <img
+                src={src}
+                alt={alt}
+                onLoad={() => setLoaded(true)}
+                loading="lazy"
+                className={`${className} transition-all duration-[1200ms] cubic-bezier(0.16, 1, 0.3, 1) ${
+                    loaded ? 'blur-0 opacity-100 scale-100' : 'blur-xl opacity-30 scale-105'
+                }`}
+                {...props}
+            />
+        </div>
+    );
+}
+
 export default function PublicIndex({ images = [] }) {
     const { locale } = useContext(TranslationContext);
-    const [activeImage, setActiveImage] = useState(null);
+    
+    // Lightbox State
+    const [lightboxIndex, setLightboxIndex] = useState(null);
 
-    const observerRefs = useRef([]);
+    // Escape key listener for lightbox
     useEffect(() => {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('opacity-100', 'translate-y-0');
-                        entry.target.classList.remove('opacity-0', 'translate-y-12');
-                    }
-                });
-            },
-            { threshold: 0.1 }
-        );
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') setLightboxIndex(null);
+            if (e.key === 'ArrowRight' && lightboxIndex !== null) handleNext();
+            if (e.key === 'ArrowLeft' && lightboxIndex !== null) handlePrev();
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [lightboxIndex]);
 
-        observerRefs.current.forEach((ref) => {
-            if (ref) observer.observe(ref);
-        });
-
-        return () => observer.disconnect();
-    }, []);
-
-    const addToRefs = (el) => {
-        if (el && !observerRefs.current.includes(el)) {
-            observerRefs.current.push(el);
+    // Prevent scrolling when lightbox is open
+    useEffect(() => {
+        if (lightboxIndex !== null) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'auto';
         }
-    };
+    }, [lightboxIndex]);
+
+    const handleNext = useCallback(() => {
+        setLightboxIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, [images.length]);
+
+    const handlePrev = useCallback(() => {
+        setLightboxIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+    }, [images.length]);
 
     const getStatic = (key) => {
         const text = {
             title: { id: 'Galeri Visual', en: 'Visual Gallery' },
+            subtitle: { id: 'Sebuah Jurnal Fotografi', en: 'A Photographic Journal' },
             desc: {
                 id: 'Arsip digital kegiatan akademik, seremonial, dan dokumentasi visual Universitas Mulawarman. Menampilkan momen-momen bersejarah dalam kualitas resolusi tinggi.',
                 en: 'Digital archive of academic, ceremonial activities, and visual documentation of Universitas Mulawarman. Showcasing historical moments in high resolution.'
             },
-            filter_all: { id: 'Semua', en: 'All' },
-            filter_photos: { id: 'Foto', en: 'Photos' },
-            filter_videos: { id: 'Video', en: 'Videos' },
-            empty_state: { id: 'Belum ada aset galeri.', en: 'No gallery assets available.' },
-            close_btn: { id: 'Tutup', en: 'Close' }
+            empty_state: { id: 'Belum ada aset galeri yang diunggah.', en: 'No gallery assets uploaded yet.' },
+            featured: { id: 'Momen Pilihan', en: 'Featured Moments' }
         };
         return text[key] ? text[key][locale] : '';
     };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(dateString).toLocaleDateString(locale === 'id' ? 'id-ID' : 'en-US', options);
+    };
+
+    // Derived Data
+    const heroImage = images.length > 0 ? images[0] : null;
+    const featuredImages = images.slice(0, 2);
+    const masonryImages = images.slice(2);
 
     return (
         <PublicLayout>
             <Head title={locale === 'id' ? 'Galeri Visual - Humas Intern Unmul' : 'Visual Gallery - Humas Intern Unmul'} />
 
-            {/* Header Section */}
-            <section className="relative pt-40 pb-20 px-margin-mobile md:px-margin-desktop bg-[#050505] overflow-hidden border-b border-white/5">
-                <div className="absolute top-0 left-0 w-[800px] h-[800px] bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
-
-                <div className="max-w-[1280px] mx-auto relative z-10 animate-fade-in-up">
-                    <div className="max-w-3xl mb-16">
-                        <span className="editorial-overline"><TranslatedText locale={locale}>{locale === 'id' ? 'Dokumentasi' : 'Documentation'}</TranslatedText></span>
-                        <h1 className="editorial-display text-white mb-6">
-                            <TranslatedText locale={locale}>{getStatic('title')}</TranslatedText>
-                        </h1>
-                        <p className="font-sans text-xl text-white/60 leading-relaxed block">
-                            <TranslatedText locale={locale}>{getStatic('desc')}</TranslatedText>
-                        </p>
-                    </div>
-
-                    {/* FilterBar */}
-                    <div className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar">
-                        <button className="shrink-0 px-6 py-2.5 rounded-full font-sans text-xs tracking-widest uppercase transition-all duration-300 bg-white text-[#050505] font-semibold">
-                            <TranslatedText locale={locale}>{getStatic('filter_all')}</TranslatedText>
-                        </button>
-                        <button className="shrink-0 px-6 py-2.5 rounded-full font-sans text-xs tracking-widest uppercase transition-all duration-300 bg-transparent border border-white/20 text-white/60 hover:text-white hover:border-white/40">
-                            <TranslatedText locale={locale}>{getStatic('filter_photos')}</TranslatedText>
-                        </button>
-                        <button className="shrink-0 px-6 py-2.5 rounded-full font-sans text-xs tracking-widest uppercase transition-all duration-300 bg-transparent border border-white/20 text-white/60 hover:text-white hover:border-white/40">
-                            <TranslatedText locale={locale}>{getStatic('filter_videos')}</TranslatedText>
-                        </button>
-                    </div>
+            {/* 1. Cinematic Hero Section (0px border radius) */}
+            <section className="relative w-full min-h-[60vh] md:min-h-[80vh] flex items-center justify-center overflow-hidden bg-[#050505]">
+                {/* Background Image / Overlay */}
+                {heroImage ? (
+                    <div 
+                        className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[10s] ease-out scale-105 hover:scale-100"
+                        style={{ backgroundImage: `url(${heroImage.url})` }}
+                    />
+                ) : (
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#111] to-[#050505]" />
+                )}
+                <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
+                
+                {/* Hero Content */}
+                <div className="relative z-10 max-w-[1280px] w-full mx-auto px-margin-mobile md:px-margin-desktop text-center">
+                    <motion.span 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        className="editorial-overline text-white/70 tracking-[0.3em] mb-6 block"
+                    >
+                        <TranslatedText locale={locale}>{getStatic('subtitle')}</TranslatedText>
+                    </motion.span>
+                    <motion.h1 
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                        className="font-display text-5xl md:text-7xl lg:text-[88px] text-white font-bold tracking-tight mb-8"
+                    >
+                        <TranslatedText locale={locale}>{getStatic('title')}</TranslatedText>
+                    </motion.h1>
+                    <motion.p 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 1, delay: 0.3 }}
+                        className="font-sans text-lg md:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed"
+                    >
+                        <TranslatedText locale={locale}>{getStatic('desc')}</TranslatedText>
+                    </motion.p>
                 </div>
             </section>
 
-            {/* Dynamic Masonry Grid */}
-            <section className="bg-[#050505]">
-                <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-24">
+            <div className="bg-[#050505] w-full">
                 {images.length === 0 ? (
-                    <div className="py-20 text-center text-white/60 font-sans">
-                        <p className="block"><TranslatedText locale={locale}>{getStatic('empty_state')}</TranslatedText></p>
+                    <div className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-32 text-center">
+                        <p className="text-white/40 font-sans text-lg"><TranslatedText locale={locale}>{getStatic('empty_state')}</TranslatedText></p>
                     </div>
                 ) : (
-                    <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
-                        {images.map((image, idx) => (
-                            <article 
-                                key={image.id}
-                                onClick={() => setActiveImage(image)}
-                                ref={addToRefs}
-                                className={`break-inside-avoid relative cinematic-card overflow-hidden group cursor-pointer flex flex-col opacity-0 translate-y-12 transition-all duration-1000 ease-out delay-${(idx % 3) * 100}`}
+                    <>
+                        {/* 2. Featured Photography Section (0px border radius, layout breathes through whitespace) */}
+                        {featuredImages.length > 0 && (
+                            <section className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-24 md:py-32">
+                                <div className="mb-16">
+                                    <h2 className="font-display text-3xl md:text-5xl text-white font-bold tracking-tight">
+                                        <TranslatedText locale={locale}>{getStatic('featured')}</TranslatedText>
+                                    </h2>
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-start">
+                                    {featuredImages.map((img, idx) => (
+                                        <motion.div 
+                                            key={img.id}
+                                            initial={{ opacity: 0, y: 40, filter: 'blur(10px)' }}
+                                            whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                            viewport={{ once: true, margin: "-100px" }}
+                                            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: idx * 0.2 }}
+                                            className={`relative group cursor-pointer ${idx === 1 ? 'md:mt-32' : ''}`}
+                                            onClick={() => setLightboxIndex(idx)}
+                                        >
+                                            <CinematicImage 
+                                                src={img.url} 
+                                                alt={img.title} 
+                                                aspectClass="aspect-[4/5] md:aspect-auto md:min-h-[600px] rounded-none"
+                                                className="w-full h-auto object-cover transition-all duration-1000 ease-out group-hover:scale-[1.02] group-hover:brightness-105" 
+                                            />
+                                            <div className="mt-8 space-y-3">
+                                                <span className="font-sans text-xs text-white/50 uppercase tracking-widest">{formatDate(img.created_at)}</span>
+                                                <h3 className="font-display text-2xl md:text-3xl text-white tracking-tight"><TranslatedText locale={locale}>{img.title}</TranslatedText></h3>
+                                                {img.caption && (
+                                                    <p className="font-sans text-white/60 line-clamp-2 leading-relaxed"><TranslatedText locale={locale}>{img.caption}</TranslatedText></p>
+                                                )}
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </section>
+                        )}
+
+                        {/* 3. Editorial Masonry Gallery (Subtle 2px border radius only, whitespace is hero) */}
+                        {masonryImages.length > 0 && (
+                            <section className="max-w-[1280px] mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24">
+                                <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+                                    {masonryImages.map((img, idx) => {
+                                        const globalIndex = idx + featuredImages.length;
+                                        return (
+                                            <motion.div
+                                                key={img.id}
+                                                initial={{ opacity: 0, y: 30, filter: 'blur(8px)' }}
+                                                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                                                viewport={{ once: true, margin: "-50px" }}
+                                                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                                                className="break-inside-avoid relative overflow-hidden group cursor-pointer rounded-[2px] bg-white/5"
+                                                onClick={() => setLightboxIndex(globalIndex)}
+                                            >
+                                                <CinematicImage 
+                                                    src={img.url} 
+                                                    alt={img.title} 
+                                                    className="w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
+                                                />
+                                                {/* Soft Hover Overlay (Subtle gradient reveal) */}
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex flex-col justify-end p-6">
+                                                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                                                        <span className="font-sans text-xs text-white/70 uppercase tracking-widest mb-2 block">{formatDate(img.created_at)}</span>
+                                                        <h4 className="font-display text-xl text-white tracking-tight line-clamp-2"><TranslatedText locale={locale}>{img.title}</TranslatedText></h4>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        );
+                                    })}
+                                </div>
+                            </section>
+                        )}
+                    </>
+                )}
+            </div>
+
+            {/* 4. Fullscreen Lightbox Experience (0px border radius, edge-to-edge gallery feel) */}
+            <AnimatePresence>
+                {lightboxIndex !== null && (
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl"
+                    >
+                        {/* Header/Controls */}
+                        <div className="absolute top-0 left-0 right-0 p-6 md:p-10 flex justify-between items-center z-10">
+                            <span className="font-mono text-sm text-white/50 tracking-widest">
+                                {lightboxIndex + 1} <span className="mx-2">/</span> {images.length}
+                            </span>
+                            <button 
+                                onClick={() => setLightboxIndex(null)}
+                                className="w-12 h-12 rounded-full bg-white/5 hover:bg-white/20 flex items-center justify-center text-white transition-colors duration-300 backdrop-blur-md"
+                            >
+                                <span className="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+
+                        {/* Navigation Arrows */}
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                            className="absolute left-4 md:left-10 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 hidden md:flex items-center justify-center text-white transition-colors duration-300 backdrop-blur-md z-10"
+                        >
+                            <span className="material-symbols-outlined">chevron_left</span>
+                        </button>
+                        <button 
+                            onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                            className="absolute right-4 md:right-10 top-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-white/5 hover:bg-white/20 hidden md:flex items-center justify-center text-white transition-colors duration-300 backdrop-blur-md z-10"
+                        >
+                            <span className="material-symbols-outlined">chevron_right</span>
+                        </button>
+
+                        {/* Image & Details */}
+                        <div 
+                            className="w-full h-full flex flex-col md:flex-row items-center justify-center p-6 md:p-24 gap-8 md:gap-16"
+                            onClick={() => setLightboxIndex(null)} // Click outside to close
+                        >
+                            <motion.div 
+                                key={`img-${lightboxIndex}`}
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                                className="relative max-w-full max-h-[70vh] md:max-h-[85vh] flex-1 flex justify-center items-center rounded-none"
+                                onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
                             >
                                 <img 
-                                    className="w-full h-auto object-cover transition-transform duration-1000 group-hover:scale-105 opacity-90 group-hover:opacity-100" 
-                                    alt={image.title || 'Gallery image'} 
-                                    loading="lazy"
-                                    src={image.url}
+                                    src={images[lightboxIndex].url} 
+                                    alt={images[lightboxIndex].title}
+                                    className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-none"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-[#050505]/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
-                                    <h3 className="font-sans text-xl text-white font-light tracking-tight mb-2 line-clamp-1"><TranslatedText locale={locale}>{image.title}</TranslatedText></h3>
-                                    <p className="font-sans text-xs text-white/70 line-clamp-2 block"><TranslatedText locale={locale}>{image.caption}</TranslatedText></p>
-                                </div>
-                            </article>
-                        ))}
-                    </div>
-                )}
-                </div>
-            </section>
-
-            {/* Lightbox Modal */}
-            {activeImage && (
-                <div 
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-[#050505]/95 backdrop-blur-xl p-4 md:p-8 animate-fade-in"
-                    onClick={() => setActiveImage(null)}
-                >
-                    <button 
-                        className="absolute top-8 right-8 w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white hover:text-[#050505] transition-all duration-300"
-                        onClick={() => setActiveImage(null)}
-                    >
-                        <span className="material-symbols-outlined">close</span>
-                    </button>
-                    <div 
-                        className="relative max-w-5xl w-full max-h-[85vh] flex flex-col items-center gap-8"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <img 
-                            className="max-w-full max-h-[65vh] object-contain rounded-xl shadow-2xl" 
-                            src={activeImage.url} 
-                            alt={activeImage.title}
-                        />
-                        <div className="text-center w-full max-w-2xl">
-                            <h3 className="font-sans text-3xl font-light text-white mb-4"><TranslatedText locale={locale}>{activeImage.title}</TranslatedText></h3>
-                            <p className="font-sans text-base text-white/60 leading-relaxed block"><TranslatedText locale={locale}>{activeImage.caption}</TranslatedText></p>
+                            </motion.div>
+                            
+                            <motion.div 
+                                key={`text-${lightboxIndex}`}
+                                initial={{ opacity: 0, x: 20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: 20 }}
+                                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                                className="w-full md:w-[400px] flex flex-col shrink-0 text-left"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <span className="font-sans text-xs text-white/50 uppercase tracking-widest mb-4 block">
+                                    {formatDate(images[lightboxIndex].created_at)}
+                                </span>
+                                <h3 className="font-display text-2xl md:text-3xl font-light text-white mb-6 leading-tight">
+                                    <TranslatedText locale={locale}>{images[lightboxIndex].title}</TranslatedText>
+                                </h3>
+                                {images[lightboxIndex].caption && (
+                                    <p className="font-sans text-base text-white/70 leading-relaxed block">
+                                        <TranslatedText locale={locale}>{images[lightboxIndex].caption}</TranslatedText>
+                                    </p>
+                                )}
+                            </motion.div>
                         </div>
-                    </div>
-                </div>
-            )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </PublicLayout>
     );
 }
