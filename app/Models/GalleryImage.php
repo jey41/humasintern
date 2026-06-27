@@ -10,7 +10,10 @@ class GalleryImage extends Model
     use HasFactory;
 
     protected $fillable = [
-        'url',
+        'media_url',
+        'media_type',
+        'media_source',
+        'thumbnail',
         'title',
         'caption',
     ];

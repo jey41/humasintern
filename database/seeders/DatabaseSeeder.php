@@ -309,33 +309,55 @@ class DatabaseSeeder extends Seeder
         GalleryImage::truncate();
         GalleryImage::insert([
             [
-                'url' => 'https://picsum.photos/seed/gallery1/800/800',
+                'media_url' => 'https://picsum.photos/seed/gallery1/800/800',
+                'media_type' => 'image',
+                'media_source' => 'local',
+                'thumbnail' => null,
                 'title' => 'Behind The Scene PKKMB Unmul',
                 'caption' => 'PKKMB Unmul Behind the Scenes',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'url' => 'https://picsum.photos/seed/gallery2/800/800',
+                'media_url' => 'https://picsum.photos/seed/gallery2/800/800',
+                'media_type' => 'image',
+                'media_source' => 'local',
+                'thumbnail' => null,
                 'title' => 'Rapat Konten Mingguan',
                 'caption' => 'Weekly Content Meeting',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'url' => 'https://picsum.photos/seed/gallery3/800/800',
-                'title' => 'Humas Beraksi',
-                'caption' => 'Humas in Action',
+                'media_url' => 'https://www.instagram.com/reel/DaDeeEJRqLD/',
+                'media_type' => 'video',
+                'media_source' => 'instagram',
+                'thumbnail' => 'https://picsum.photos/seed/vidthumb1/800/1200',
+                'title' => 'Sisi Lain UKT',
+                'caption' => 'Liputan khusus seputar UKT di kampus.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
-                'url' => 'https://picsum.photos/seed/gallery4/800/800',
-                'title' => 'Editing Room',
-                'caption' => 'Editing Room',
+                'media_url' => 'https://www.instagram.com/reel/DYeqa-XPPuP/',
+                'media_type' => 'video',
+                'media_source' => 'instagram',
+                'thumbnail' => 'https://picsum.photos/seed/vidthumb2/800/1200',
+                'title' => 'Reels Seru Kampus',
+                'caption' => 'Kesibukan teman-teman di siang hari.',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'media_url' => 'https://www.instagram.com/reel/DYZoMVdv9z5/',
+                'media_type' => 'video',
+                'media_source' => 'instagram',
+                'thumbnail' => 'https://picsum.photos/seed/vidthumb3/800/1200',
+                'title' => 'Vlog Kegiatan Mahasiswa',
+                'caption' => 'Satu hari bersama Humas Intern.',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
         ]);
 
         // 7. Seed Contact Submissions

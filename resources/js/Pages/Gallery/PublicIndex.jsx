@@ -8,10 +8,13 @@ import TranslatedText from '@/Components/Transitions/TranslatedText';
 function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
     const [loaded, setLoaded] = useState(false);
 
+    // Fallback if src is missing
+    const imageSrc = src || 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop';
+
     return (
         <div className={`relative w-full overflow-hidden bg-white/[0.02] ${aspectClass}`}>
             <img
-                src={src}
+                src={imageSrc}
                 alt={alt}
                 onLoad={() => setLoaded(true)}
                 loading="lazy"
@@ -23,6 +26,22 @@ function CinematicImage({ src, alt, className, aspectClass = "", ...props }) {
         </div>
     );
 }
+
+// Helper to get clean instagram embed url
+const getInstagramEmbedUrl = (url) => {
+    if (!url) return '';
+    try {
+        const urlObj = new URL(url);
+        urlObj.search = ''; // Remove all query params
+        let cleanUrl = urlObj.toString();
+        if (!cleanUrl.endsWith('/')) {
+            cleanUrl += '/';
+        }
+        return `${cleanUrl}embed/`;
+    } catch(e) {
+        return url;
+    }
+};
 
 export default function PublicIndex({ images = [] }) {
     const { locale } = useContext(TranslationContext);
@@ -93,7 +112,7 @@ export default function PublicIndex({ images = [] }) {
                 {heroImage ? (
                     <div 
                         className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-transform duration-[10s] ease-out scale-105 hover:scale-100"
-                        style={{ backgroundImage: `url(${heroImage.url})` }}
+                        style={{ backgroundImage: `url(${heroImage.media_type === 'video' ? heroImage.thumbnail : heroImage.media_url})` }}
                     />
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-b from-[#111] to-[#050505]" />
@@ -149,11 +168,18 @@ export default function PublicIndex({ images = [] }) {
                                             onClick={() => setLightboxIndex(idx)}
                                         >
                                             <CinematicImage 
-                                                src={img.url} 
+                                                src={img.media_type === 'video' ? img.thumbnail : img.media_url} 
                                                 alt={img.title} 
                                                 aspectClass="aspect-[4/5] md:aspect-auto md:min-h-[600px] rounded-none"
                                                 className="w-full h-auto object-cover transition-all duration-1000 ease-out group-hover:scale-[1.02] group-hover:brightness-105" 
                                             />
+                                            {img.media_type === 'video' && (
+                                                <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-transform duration-500 group-hover:scale-110">
+                                                    <div className="w-16 h-16 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/30 text-white shadow-xl">
+                                                        <span className="material-symbols-outlined text-3xl ml-1">play_arrow</span>
+                                                    </div>
+                                                </div>
+                                            )}
                                             <div className="mt-8 space-y-3">
                                                 <span className="font-sans text-xs text-white/50 uppercase tracking-widest">{formatDate(img.created_at)}</span>
                                                 <h3 className="font-display text-2xl md:text-3xl text-white tracking-tight"><TranslatedText locale={locale}>{img.title}</TranslatedText></h3>
@@ -184,10 +210,17 @@ export default function PublicIndex({ images = [] }) {
                                                 onClick={() => setLightboxIndex(globalIndex)}
                                             >
                                                 <CinematicImage 
-                                                    src={img.url} 
+                                                    src={img.media_type === 'video' ? img.thumbnail : img.media_url} 
                                                     alt={img.title} 
                                                     className="w-full h-auto object-cover transition-all duration-700 ease-out group-hover:scale-[1.02] group-hover:brightness-105"
                                                 />
+                                                {img.media_type === 'video' && (
+                                                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-transform duration-500 group-hover:scale-110">
+                                                        <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/30 text-white shadow-xl">
+                                                            <span className="material-symbols-outlined text-2xl ml-0.5">play_arrow</span>
+                                                        </div>
+                                                    </div>
+                                                )}
                                                 {/* Soft Hover Overlay (Subtle gradient reveal) */}
                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out flex flex-col justify-end p-6">
                                                     <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
@@ -256,11 +289,24 @@ export default function PublicIndex({ images = [] }) {
                                 className="relative max-w-full max-h-[70vh] md:max-h-[85vh] flex-1 flex justify-center items-center rounded-none"
                                 onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
                             >
-                                <img 
-                                    src={images[lightboxIndex].url} 
-                                    alt={images[lightboxIndex].title}
-                                    className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-none"
-                                />
+                                {images[lightboxIndex].media_type === 'video' && images[lightboxIndex].media_source === 'instagram' ? (
+                                    <div className="w-full max-w-[350px] md:max-w-[400px] h-[70vh] md:h-[80vh] bg-black rounded-xl overflow-hidden relative shadow-2xl border border-white/10" onClick={(e) => e.stopPropagation()}>
+                                        <iframe 
+                                            src={getInstagramEmbedUrl(images[lightboxIndex].media_url)}
+                                            className="w-full h-full"
+                                            frameBorder="0"
+                                            scrolling="no"
+                                            allowTransparency="true"
+                                            allow="encrypted-media"
+                                        ></iframe>
+                                    </div>
+                                ) : (
+                                    <img 
+                                        src={images[lightboxIndex].media_url} 
+                                        alt={images[lightboxIndex].title}
+                                        className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-none"
+                                    />
+                                )}
                             </motion.div>
                             
                             <motion.div 

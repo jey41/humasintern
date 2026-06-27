@@ -33,7 +33,9 @@ class GalleryController extends Controller
                 $url = Storage::url($path);
 
                 GalleryImage::create([
-                    'url' => $url,
+                    'media_url' => $url,
+                    'media_type' => 'image',
+                    'media_source' => 'local',
                     'title' => $request->input('title') ?: $file->getClientOriginalName(),
                     'caption' => $request->input('caption'),
                 ]);
@@ -45,8 +47,8 @@ class GalleryController extends Controller
 
     public function destroy(GalleryImage $gallery): RedirectResponse
     {
-        if ($gallery->url) {
-            $oldPath = str_replace('/storage/', '', $gallery->url);
+        if ($gallery->media_url && $gallery->media_source === 'local') {
+            $oldPath = str_replace('/storage/', '', $gallery->media_url);
             Storage::disk('public')->delete($oldPath);
         }
 
