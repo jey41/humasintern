@@ -3,6 +3,8 @@ import { Link } from '@inertiajs/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import TranslatedText from '@/Components/Transitions/TranslatedText';
+import MagneticButton from '@/Components/Transitions/MagneticButton';
+import { playUITick } from '@/utils/sound';
 
 const LanguageSwitcher = ({ locale, setLocale, layoutIdPrefix }) => (
     <div className="relative flex bg-white/5 backdrop-blur-md border border-white/10 rounded-full p-1 shadow-sm pointer-events-auto">
@@ -91,13 +93,18 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                                 </Link>
 
                                 <div className="pointer-events-auto flex items-center gap-6">
-                                    <LanguageSwitcher locale={locale} setLocale={setLocale} layoutIdPrefix="initial" />
-                                    <Link 
-                                        href="/login" 
-                                        className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-2.5 px-6 text-sm font-sans transition-all duration-300 hover:bg-white/20 hover:scale-105 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
-                                    >
-                                        <TranslatedText locale={locale}>{loginText}</TranslatedText>
-                                    </Link>
+                                    <MagneticButton intensity={0.15}>
+                                        <LanguageSwitcher locale={locale} setLocale={setLocale} layoutIdPrefix="initial" />
+                                    </MagneticButton>
+                                    <MagneticButton intensity={0.15}>
+                                        <Link 
+                                            href="/login" 
+                                            onMouseEnter={playUITick}
+                                            className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-2.5 px-6 text-sm font-sans transition-all duration-300 hover:bg-white/20 hover:scale-105 shadow-[0_4px_30px_rgba(0,0,0,0.1)]"
+                                        >
+                                            <TranslatedText locale={locale}>{loginText}</TranslatedText>
+                                        </Link>
+                                    </MagneticButton>
                                 </div>
                             </div>
 
@@ -107,12 +114,13 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                                     <Link 
                                         key={item.path}
                                         href={item.path} 
+                                        onMouseEnter={playUITick}
                                         className="group flex items-center gap-4 py-1"
                                     >
                                         <span className={`font-sans text-xs tracking-widest uppercase transition-all duration-300 group-hover:opacity-100 group-hover:-translate-x-1 ${isRouteActive(item.path) ? 'opacity-100 text-white' : 'opacity-40'}`}>
                                             {String(idx + 1).padStart(2, '0')} <TranslatedText locale={locale}>{item.label}</TranslatedText>
                                         </span>
-                                        <span className={`h-px transition-all duration-300 bg-white ${isRouteActive(item.path) ? 'w-8 opacity-100' : 'w-0 opacity-0 group-hover:w-4 group-hover:opacity-50'}`}></span>
+                                        <span className={`h-px transition-all duration-300 ease-out bg-white ${isRouteActive(item.path) ? 'w-8 opacity-100' : 'w-0 opacity-0 group-hover:w-4 group-hover:opacity-50'}`}></span>
                                     </Link>
                                 ))}
                             </nav>
@@ -138,24 +146,30 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                                         <Link 
                                             key={item.path}
                                             href={item.path}
+                                            onMouseEnter={playUITick}
                                             className="relative group py-2"
                                         >
                                             <span className={`font-sans text-sm tracking-wide transition-colors duration-300 whitespace-nowrap ${isRouteActive(item.path) ? 'text-white' : 'text-white/60 group-hover:text-white'}`}>
                                                 <TranslatedText locale={locale}>{item.label}</TranslatedText>
                                             </span>
-                                            <span className={`absolute left-0 bottom-0 h-[1px] bg-white transition-all duration-300 ${isRouteActive(item.path) ? 'w-full opacity-100' : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-50'}`}></span>
+                                            <span className={`absolute left-1/2 -translate-x-1/2 bottom-0 h-[1px] bg-white transition-all duration-300 ease-out ${isRouteActive(item.path) ? 'w-full opacity-100' : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-50'}`}></span>
                                         </Link>
                                     ))}
                                 </nav>
 
                                 <div className="flex items-center gap-6 shrink-0">
-                                    <LanguageSwitcher locale={locale} setLocale={setLocale} layoutIdPrefix="scrolled" />
-                                    <Link 
-                                        href="/login" 
-                                        className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-2 px-5 text-sm font-sans transition-all duration-300 hover:bg-white/20 hover:scale-105"
-                                    >
-                                        <TranslatedText locale={locale}>{loginText}</TranslatedText>
-                                    </Link>
+                                    <MagneticButton intensity={0.15}>
+                                        <LanguageSwitcher locale={locale} setLocale={setLocale} layoutIdPrefix="scrolled" />
+                                    </MagneticButton>
+                                    <MagneticButton intensity={0.15}>
+                                        <Link 
+                                            href="/login" 
+                                            onMouseEnter={playUITick}
+                                            className="inline-flex items-center justify-center rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white py-2 px-5 text-sm font-sans transition-all duration-300 hover:bg-white/20 hover:scale-105"
+                                        >
+                                            <TranslatedText locale={locale}>{loginText}</TranslatedText>
+                                        </Link>
+                                    </MagneticButton>
                                 </div>
                             </div>
                         </motion.div>
@@ -200,6 +214,7 @@ export default function CinematicNavigation({ navItems, loginText, locale, setLo
                                         <Link 
                                             href={item.path}
                                             onClick={() => setIsMobileMenuOpen(false)}
+                                            onMouseEnter={playUITick}
                                             className={`editorial-display text-5xl md:text-6xl tracking-tight transition-colors duration-300 ${isRouteActive(item.path) ? 'text-white' : 'text-white/40 hover:text-white'}`}
                                         >
                                             <TranslatedText locale={locale}>{item.label}</TranslatedText>
