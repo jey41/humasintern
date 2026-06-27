@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from '@inertiajs/react';
 import CinematicNavigation from '@/Components/CinematicNavigation';
 import CinematicFooter from '@/Components/CinematicFooter';
@@ -16,6 +16,21 @@ export default function PublicLayout({ children }) {
         return localStorage.getItem('locale') || 'id';
     });
     const [darkMode, setDarkMode] = useState(true);
+    const [footerHeight, setFooterHeight] = useState(0);
+    const footerRef = useRef(null);
+
+    useEffect(() => {
+        if (!footerRef.current) return;
+        
+        const resizeObserver = new ResizeObserver((entries) => {
+            for (let entry of entries) {
+                setFooterHeight(entry.contentRect.height);
+            }
+        });
+        
+        resizeObserver.observe(footerRef.current);
+        return () => resizeObserver.disconnect();
+    }, []);
 
     useEffect(() => {
         localStorage.setItem('locale', locale);
@@ -76,24 +91,36 @@ export default function PublicLayout({ children }) {
 
     return (
         <TranslationContext.Provider value={{ locale, setLocale, t }}>
-            <div className="bg-[#050505] text-white min-h-screen flex flex-col font-sans selection:bg-white/20 selection:text-white">
+            <div className="bg-[#050505] text-white min-h-screen font-sans selection:bg-white/20 selection:text-white relative">
                 
-                {/* Cinematic Hybrid Navigation */}
-                <CinematicNavigation 
-                    navItems={navItems} 
-                    loginText={getStaticText('nav_login')} 
-                    locale={locale} 
-                    setLocale={setLocale} 
-                />
+                {/* Top Layer: Nav & Main Content */}
+                <div 
+                    className="relative z-10 bg-[#050505] flex flex-col min-h-screen transition-all duration-300 shadow-[0_30px_60px_rgba(0,0,0,1)]"
+                    style={{ marginBottom: `${footerHeight}px` }}
+                >
+                    {/* Cinematic Hybrid Navigation */}
+                    <CinematicNavigation 
+                        navItems={navItems} 
+                        loginText={getStaticText('nav_login')} 
+                        locale={locale} 
+                        setLocale={setLocale} 
+                    />
 
-                {/* Main Content */}
-                <div className="flex-grow animate-fade-in-up">
-                    {children}
+                    {/* Main Content */}
+                    <div className="flex-grow animate-fade-in-up">
+                        {children}
+                    </div>
                 </div>
 
+                {/* Bottom Layer: Fixed Parallax Footer */}
+                <div className="fixed bottom-0 left-0 w-full z-0">
+                    <CinematicFooter 
+                        ref={footerRef}
+                        getStaticText={getStaticText} 
+                        navItems={navItems} 
+                    />
+                </div>
 
-                {/* Footer */}
-                <CinematicFooter getStaticText={getStaticText} navItems={navItems} />
             </div>
         </TranslationContext.Provider>
     );
